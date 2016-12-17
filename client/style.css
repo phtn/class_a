@@ -9,8 +9,8 @@ body {
 }
 .cards {
   margin: 10px;
-  background-color: #00796B !important;
-  min-height: 100px;
+  background-color: #ccc !important;
+  min-height: 160px;
   padding-left: 45%;
 }
 .card-header {
@@ -25,9 +25,9 @@ hr {
 	border-bottom: 1px solid #424242;
 }
 .bm-name {
-	font-family: 'Quicksand', sans-serif;
-	font-weight: 700;
-	font-size: 1.5em;
+	font-family: 'Play', serif;
+	font-weight: 40;
+	font-size: 1.3em;
 	color: #80CBC4;
 }
 .item-header {
@@ -35,9 +35,12 @@ hr {
 	font-weight: 700;
 	font-size: 1.5em;
 	color: #222;
-	line-height: 100px;
+	line-height: 160px;
 	text-align: center;
 }
 .top-card {
 	background-color: #212121 !important;
+}
+.tabs {
+	background-color: #222 !important;
 }
