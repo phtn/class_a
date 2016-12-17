@@ -1,6 +1,43 @@
 body {
   background-color: #212121;
 }
+.brand-div {
+	margin: 5px;
+	color: #999;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 100;
+}
 .cards {
-  margin: 10px
+  margin: 10px;
+  background-color: #00796B !important;
+  min-height: 100px;
+  padding-left: 45%;
+}
+.card-header {
+	font-family: 'Quicksand', sans-serif;
+	font-weight: 700;
+	font-size: 2em;
+	color: #EF5350;
+	margin: 10px;
+}
+hr {
+	
+	border-bottom: 1px solid #424242;
+}
+.bm-name {
+	font-family: 'Quicksand', sans-serif;
+	font-weight: 700;
+	font-size: 1.5em;
+	color: #80CBC4;
+}
+.item-header {
+	font-family: 'Quicksand', sans-serif;
+	font-weight: 700;
+	font-size: 1.5em;
+	color: #222;
+	line-height: 100px;
+	text-align: center;
+}
+.top-card {
+	background-color: #212121 !important;
 }

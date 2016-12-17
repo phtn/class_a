@@ -8,6 +8,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Nav from './nav'
 import Main from './main'
 import Cnc from './cnc'
+import POS from './pos'
 
 injectTapEventPlugin(); // touchscreen plugin
 
@@ -19,8 +20,8 @@ export default class App extends Component {
     return(
       <Mui muiTheme={getMuiTheme(dark)}>
       <div>
-        <Nav brand="class a"/>
-        <Cnc />
+        
+        <POS />
       </div>
       </Mui>
     )
