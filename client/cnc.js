@@ -23,7 +23,7 @@ class Cnc extends Component {
           <Tab label="Apartments" value={3}/>
         </Tabs>
 
-        
+
       </div>
     )
   }

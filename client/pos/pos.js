@@ -46,24 +46,24 @@ export default class POS extends Component {
 		return (
 			<div>
 			<Card className="top-card">
-				<Paper 
-					zDepth={2} 
+				<Paper
+					zDepth={2}
 					children={<div className="brand-div"><Logo color={red400}/>NANOS</div>}/>
-				
-				
+
+
 
 				<div style={styles.wrapper}>
 					<Chip style={styles.chip}>
 						<Avatar />
 						<span className="bm-name">Enceladus</span>
 					</Chip>
-				
+
 					<Chip style={styles.chip}>
 						<Avatar />
 						<span className="bm-name">Mimas</span>
 					</Chip>
 				</div>
-				
+
 			</Card>
 
 			<div>
@@ -73,26 +73,26 @@ export default class POS extends Component {
           <FlatButton labelStyle={styles.cat} label="Tap" secondary={true}/>
         </ToolbarGroup>
 
-        <ToolbarGroup>  
+        <ToolbarGroup>
           <FlatButton labelStyle={styles.cat} label="Bottle" secondary={true}/>
         </ToolbarGroup>
 
-        <ToolbarGroup lastChild={true}>  
+        <ToolbarGroup lastChild={true}>
           <FlatButton labelStyle={styles.cat} label="shots" secondary={true}/>
         </ToolbarGroup>
 
-        <ToolbarGroup lastChild={true}>  
+        <ToolbarGroup lastChild={true}>
           <FlatButton labelStyle={styles.cat} label="mix" secondary={true}/>
         </ToolbarGroup>
 
-        <ToolbarGroup lastChild={true}>  
+        <ToolbarGroup lastChild={true}>
           <FlatButton labelStyle={styles.cat} label="wine" secondary={true}/>
         </ToolbarGroup>
 
-        <ToolbarGroup lastChild={true}>  
+        <ToolbarGroup lastChild={true}>
           <FlatButton labelStyle={styles.cat} label="soda" secondary={true}/>
         </ToolbarGroup>
-          
+
         </Toolbar>
 	    </div>
 

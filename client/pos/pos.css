@@ -1,0 +1,27 @@
+.bt-div {
+  width: 100px;
+  height: 300px;
+}
+.bartender-panel {
+  width: 68%;
+  height: 400px;
+  background: transparent !important;
+  border: 1px solid #444;
+}
+.sales-panel {
+  width: 28%;
+  height: 700px;
+  background: transparent !important;
+  border: 1px solid #444;
+}
+.add-bt-card {
+  background-color: #666 !important;
+}
+.add-cards {
+  width: 35%;
+  background-color: #666 !important;
+
+}
+.bt-names {
+  color: #ccc;
+}
