@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Bartenders } from '/collections/bartenders'
+import { Beers } from '/collections/beers'
 
 Meteor.startup(() => {
   Meteor.methods({
@@ -13,6 +14,16 @@ Meteor.startup(() => {
         createAt: d.toLocaleString()
       })
       return bartender
+    },
+
+    insertBeer(beer, price) {
+      const d = new Date()
+      const beers = Beers.insert({
+        name: beer,
+        price: price,
+        createAt: d.toLocaleString()
+      })
+      return beers
     }
   })
 });

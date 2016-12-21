@@ -18,10 +18,19 @@
   background-color: #666 !important;
 }
 .add-cards {
-  width: 35%;
   background-color: #666 !important;
 
 }
 .bt-names {
   color: #ccc;
+}
+.config-icon {
+  margin-top: 10px;
+  color: #FFE082;
+}
+.config-header {
+  margin-left: 5px;
+  line-height: 20px;
+  font-weight: bolder;
+  font-family: 'Quicksand', serif;
 }

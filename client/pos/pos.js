@@ -9,6 +9,9 @@ import Logo from 'material-ui/svg-icons/av/subtitles'
 import {red400} from 'material-ui/styles/colors';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton'
+import { createContainer } from 'meteor/react-meteor-data'
+import { Bartenders } from '/collections/bartenders'
+
 
 const styles = {
   chip: {
@@ -38,30 +41,33 @@ const styles = {
   }
 }
 
-export default class POS extends Component {
+class POS extends Component {
 	constructor(props) {
 		super(props)
 	}
+  showMeBartenders() {
+    return this.props.bts.map((bt)=> (
+      <Chip style={styles.chip} key={bt._id}>
+        <Avatar />
+        <span className="bm-name">{bt.nickname}</span>
+      </Chip>
+    ))
+  }
 	render() {
+    Meteor.subscribe('showBartenders')
 		return (
 			<div>
 			<Card className="top-card">
 				<Paper
 					zDepth={2}
-					children={<div className="brand-div"><Logo color={red400}/>NANOS</div>}/>
+					children={<div className="brand-div">
+          <a href="/admin"><Logo color={red400}/></a>
+          NANOS</div>}/>
 
 
 
 				<div style={styles.wrapper}>
-					<Chip style={styles.chip}>
-						<Avatar />
-						<span className="bm-name">Enceladus</span>
-					</Chip>
-
-					<Chip style={styles.chip}>
-						<Avatar />
-						<span className="bm-name">Mimas</span>
-					</Chip>
+					{this.showMeBartenders()}
 				</div>
 
 			</Card>
@@ -118,3 +124,13 @@ export default class POS extends Component {
 		)
 	}
 }
+
+POS.propTypes = {
+  bts: React.PropTypes.array
+};
+
+export default createContainer(()=> {
+  return {
+    bts: Bartenders.find().fetch()
+  }
+}, POS)

@@ -11,7 +11,7 @@ import Main from './main'
 import Cnc from './cnc'
 import POS from './pos/pos'
 import Admin from './pos/admin'
-import AddBT from './pos/add-bt'
+import Config from './pos/config'
 
 injectTapEventPlugin(); // touchscreen plugin
 
@@ -35,6 +35,6 @@ render((
     <Route path="admin" component={Admin}>
 
     </Route>
-    <Route path="/admin/addbt" component={AddBT} />
+    <Route path="/admin/config" component={Config} />
   </Router>
 ), document.getElementById('container'))

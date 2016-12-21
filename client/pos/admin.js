@@ -47,12 +47,12 @@ class Admin extends Component {
           <Paper
             zDepth={2}
             children={<div className="brand-div">
-            <a href="/admin/addbt"><Logo color={red400}/></a>ADMIN</div>}/>
+            <a href="/admin/config"><Logo color={red400}/></a>ADMIN</div>}/>
         </Card>
 
         <div  style={panelStyles.root} >
           <Card className="bartender-panel" zDepth={0}>
-          <Table fixedFooter={true} fixedHeader={true}>
+          <Table fixedFooter={true} fixedHeader={true} selectable={false}>
             <TableHeader zDepth={2}>
                 <TableRow>
                   <TableHeaderColumn>ID</TableHeaderColumn>
