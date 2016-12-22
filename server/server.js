@@ -42,6 +42,9 @@ Meteor.startup(() => {
     },
     removeItemFromBasket(id) {
       Basket.remove({_id: id})
+    },
+    removeAllItemsFromBasket() {
+      Basket.remove({})
     }
   })
 });

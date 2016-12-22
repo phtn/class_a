@@ -116,9 +116,10 @@ class POS extends Component {
 
   showMeBasket() {
     return this.props.basket.map((item)=> (
-      <MenuItem key={item._id} primaryText={item.item} secondaryText={'$ ' + item.price} onClick={this.removeItem(item._id)}/>
+      <MenuItem key={item._id} primaryText={item.item} secondaryText={'$ ' + item.price} onClick={()=> this.removeItem(item._id)}/>
     ))
   }
+
   removeItem(id) {
     Meteor.call('removeItemFromBasket', id)
   }
@@ -130,7 +131,7 @@ class POS extends Component {
   }
   closeDrawer() {
     this.setState({drawer: false})
-    console.log('close test')
+    Meteor.call('removeAllItemsFromBasket')
   }
   openDrawer() {
     if(this.state.bartender !== '0'){
@@ -194,10 +195,10 @@ class POS extends Component {
         </GridList>
 
         <Drawer width={400} openSecondary={true} open={this.state.drawer}>
-          <AppBar title="Drawer" showMenuIconButton={false}/>
+          <AppBar title="$ " showMenuIconButton={false}/>
             {this.showMeBasket()}
             <Divider/>
-          <RaisedButton label="CHECKOUT" onClick={()=> this.closeDrawer()}/>
+          <RaisedButton label="CHECKOUT" onClick={()=> this.closeDrawer()} fullWidth={true}/>
         </Drawer>
 			</div>
 		)
