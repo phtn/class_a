@@ -12,20 +12,13 @@ import Paper from 'material-ui/Paper'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import { GridList } from 'material-ui/GridList'
-
+import { createContainer } from 'meteor/react-meteor-data'
+import { Beers } from '/collections/beers'
 
 Meteor.subscribe('showBartenders')
+Meteor.subscribe('showBeers')
 
-const handleInsert = ()=> {
-  console.log('text')
-  Meteor.call('insertBartender', Session.get('codename-input'))
-}
-const handleChangeBartender = (e) => {
-  Session.set('codename-input', e.target.value)
-}
-const handleChangeBeerName = (e) => {
-  Session.set('beer-name-input', e.target.value)
-}
+
 const addStyles = {
   hint: {
     color: "#444",
@@ -52,10 +45,34 @@ const addStyles = {
     marginRight: '10px !important',
   }
 }
+
+const handleInsertBartender = ()=> {
+  Meteor.call('insertBartender', Session.get('codename-input'))
+  document.getElementById('codename-input')
+}
+const handleInsertBeer = () => {
+  Meteor.call('insertBeer', Session.get('beer-name-input'), Session.get('beer-price-input'), Session.get('beer-type-input'), Session.get('beer-qty-input'))
+}
+const handleChangeBartender = (e) => {
+  Session.set('codename-input', e.target.value)
+}
+const handleChangeBeerName = (e) => {
+  Session.set('beer-name-input', e.target.value)
+}
+const handleChangeBeerPrice = (e) => {
+  Session.set('beer-price-input', e.target.value)
+}
+const handleChangeBeerType = (e) => {
+  Session.set('beer-type-input', e.target.value)
+}
+const handleChangeBeerQty = (e) => {
+  Session.set('beer-qty-input', e.target.value)
+}
+
 const Config = ({}) => (
   <Mui muiTheme={getMuiTheme(dark)}>
   <div>
-    <GridList cols={4}>
+    <GridList cols={3}>
 
 
     <Card className="add-cards">
@@ -68,6 +85,7 @@ const Config = ({}) => (
       />
 
     <TextField
+      id="codename-input"
       hintText="McGyver..."
       hintStyle={addStyles.hint}
       floatingLabelText= 'CodeName'
@@ -76,7 +94,7 @@ const Config = ({}) => (
       onChange={handleChangeBartender}
     />
     <CardActions>
-      <RaisedButton style={addStyles.button} onClick={handleInsert} label='Add' default={true}/>
+      <RaisedButton style={addStyles.button} onClick={handleInsertBartender} label='Add' default={true}/>
     </CardActions>
     </Card>
 
@@ -104,10 +122,27 @@ const Config = ({}) => (
       floatingLabelText= 'Price'
       floatingLabelStyle={addStyles.floating}
       style={addStyles.text}
-      onChange={handleChangeBeerName}
+      onChange={handleChangeBeerPrice}
     />
+    <TextField
+      hintText="bottles..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Type'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={handleChangeBeerType}
+    />
+    <TextField
+      hintText="24..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Quantity'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={handleChangeBeerQty}
+    />
+
     <CardActions>
-      <RaisedButton style={addStyles.button} onClick={handleInsert} label='Add' default={true}/>
+      <RaisedButton style={addStyles.button} onClick={handleInsertBeer} label='Add' default={true}/>
     </CardActions>
     </Card>
 
@@ -136,7 +171,7 @@ const Config = ({}) => (
       onChange={handleChangeBeerName}
     />
     <CardActions>
-      <RaisedButton style={addStyles.button} onClick={handleInsert} label='Add' default={true}/>
+      <RaisedButton style={addStyles.button} onClick={handleInsertBeer} label='Add' default={true}/>
     </CardActions>
     </Card>
 
@@ -144,4 +179,12 @@ const Config = ({}) => (
   </div>
   </Mui>
 )
-export default Config
+Config.propTypes = {
+  beers: React.PropTypes.array
+};
+
+export default createContainer(()=> {
+  return {
+    beers: Beers.find().fetch()
+  }
+}, Config)

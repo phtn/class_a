@@ -34,3 +34,20 @@
   font-weight: bolder;
   font-family: 'Quicksand', serif;
 }
+#corona {
+  background-image: src('/public/img/Corona_Extra.svg') !important;
+}
+.items-div {
+  width: 700px;
+}
+.cashier-div {
+  width: 200px;
+}
+.ul-cashier {
+  height: 700px;
+  border: 1px solid #666;
+  border-radius: 3px;
+  margin: 10px;
+  background-color: #eee;
+  color: #222;
+}
