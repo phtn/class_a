@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
 import { Basket } from '/collections/basket'
+import { Sales } from '/collections/sales'
 
 Meteor.startup(() => {
   Meteor.methods({
@@ -24,7 +25,7 @@ Meteor.startup(() => {
         price: price,
         type: type,
         qty: qty,
-        createAt: d.toLocaleString()
+        createdAt: d.toLocaleString()
       })
       return beers
     },
@@ -36,9 +37,20 @@ Meteor.startup(() => {
         owner: owner,
         item: item,
         price: price,
-        createAt: d.toLocaleString()
+        status: 'NOT_PAID',
+        createdAt: d.toLocaleString()
       })
       return basket
+    },
+    insertSales(owner, amount) {
+      const d = new Date()
+      const sales = Sales.insert({
+        owner: owner,
+        amount: amount,
+        createdAt: d.toLocaleString(),
+        updatedAt: d.toLocaleString()
+      })
+      return sales
     },
     removeItemFromBasket(id) {
       Basket.remove({_id: id})

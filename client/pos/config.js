@@ -60,7 +60,8 @@ const handleChangeBeerName = (e) => {
   Session.set('beer-name-input', e.target.value)
 }
 const handleChangeBeerPrice = (e) => {
-  Session.set('beer-price-input', e.target.value)
+  price = e.target.value
+  Session.set('beer-price-input', Number(price).toFixed(2))
 }
 const handleChangeBeerType = (e) => {
   Session.set('beer-type-input', e.target.value)
