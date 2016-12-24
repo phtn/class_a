@@ -24,17 +24,25 @@ import Keyboard from 'material-ui/svg-icons/hardware/keyboard'
 import IconButton from 'material-ui/IconButton'
 import { styles } from './styles'
 import TextField from 'material-ui/TextField'
+import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
+import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import Snackbar from 'material-ui/Snackbar'
 
 class POS extends Component {
 	constructor(props) {
 		super(props)
     this.state = {
       bartender: '0',
+      subtotal: 0,
       drawer: false,
       calculator: false,
       ct: '',
       change: '',
-      itemsSold: ''
+      itemsSold: '',
+      completeSnack: false,
+      snackSale: 0,
+      snackChange: 0,
+      checkoutStatus: false,
     }
 	}
   showMeBartenders() {
@@ -60,13 +68,9 @@ class POS extends Component {
         rippleStyle={styles.ripple}
         buttonStyle={styles.punch}
         onClick={()=>{
-          this.calcTotal(beer.price)
-          this.openDrawer()
           this.handlePunch(beer._id, bartender, beer.name, beer.price)
-          this.logItems(beer.name)
           }
-        }
-      />
+        }/>
     ))
 
   }
@@ -86,7 +90,7 @@ class POS extends Component {
 
   removeItem(id,price) {
     Meteor.call('removeItemFromBasket', id)
-    Session.set('totalAmount', Session.get('totalAmount')-Number(price) || 0)
+    Session.set('totalAmount', Session.get('totalAmount') > 0 ? Session.get('totalAmount')-Number(price) : 0)
   }
   who(name) {
     this.setState({bartender: name})
@@ -96,7 +100,7 @@ class POS extends Component {
   }
   calcTotal(price) {
     let p = Number(price).toFixed(2)
-    Session.set('totalAmount', Session.get('totalAmount')+Number(p))
+    Session.set('totalAmount', Session.get('totalAmount') + Number(p))
     console.log(Session.get('totalAmount'))
   }
   closeDrawer() {
@@ -104,24 +108,30 @@ class POS extends Component {
     Meteor.call('removeAllItemsFromBasket')
     Session.set('totalAmount', 0.00)
   }
-  openDrawer() {
-    if(this.state.bartender !== '0'){
-      this.setState({drawer: true})
-    }
-  }
   handlePunch(id, owner, item, price) {
-    Meteor.call('insertBasket', id, owner, item, price)
+    if(this.state.bartender !== '0'){
+      this.calcTotal(price)
+      this.setState({drawer: true})
+      Meteor.call('insertBasket', id, owner, item, price)
+      this.logItems(item)
+      this.setState({completeSnack: false})
+    }
   }
   openCalc(owner, amount) {
     this.setState({calculator: !this.state.calculator})
   }
   checkout(owner, total, ct, ch, items) {
     this.setState({calculator: false})
+    this.setState({snackSale: total})
+    this.setState({snackChange: ch})
     Meteor.call('insertSales', owner, total, ct, ch, items)
     Meteor.call('removeAllItemsFromBasket')
     Session.set('totalAmount', 0)
     Session.set('cashTendered', '')
     this.clearCalc()
+    this.setState({drawer: false})
+    this.setState({completeSnack: true})
+
   }
   enterCashTendered(n) {
     this.setState({ct: this.state.ct + n}, function() {
@@ -169,7 +179,7 @@ class POS extends Component {
         <Toolbar style={styles.tabs}>
 
         <ToolbarGroup firstChild={true}>
-          <FlatButton labelStyle={styles.cat} label="BEER" secondary={true}/>
+          <FlatButton labelStyle={styles.cat} label="BEER"/>
         </ToolbarGroup>
 
         <ToolbarGroup >
@@ -177,7 +187,7 @@ class POS extends Component {
         </ToolbarGroup>
 
         <ToolbarGroup lastChild={true}>
-          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true}/>
+          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true} onClick={()=> this.setState({completeSnack: true})}/>
         </ToolbarGroup>
 
         </Toolbar>
@@ -203,6 +213,8 @@ class POS extends Component {
             showMenuIconButton={true}
             titleStyle={styles.drawerTitle}
             iconElementLeft={<IconButton onClick={()=> this.openCalc()}><Keyboard/></IconButton>}
+            iconElementRight={<IconButton onClick={()=> this.setState({drawer: false})}><ArrowRight/></IconButton>}
+             
             zDepth={3}
             />
             {this.showMeBasket()}
@@ -230,7 +242,12 @@ class POS extends Component {
             <FlatButton label='clear' labelStyle={styles.calcClear} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.clearCalc()}/>
           </div><br/>
 
-          <RaisedButton label='checkout' primary={true} fullWidth={true} labelStyle={styles.checkout}
+          <RaisedButton 
+            label='checkout' 
+            primary={true} 
+            fullWidth={true} 
+            labelStyle={styles.checkout}
+            disabled={this.state.change < 0 || this.state.change == this.state.ct ? true : false}
             onClick={
               ()=> this.checkout(
                 this.state.bartender,
@@ -241,6 +258,17 @@ class POS extends Component {
               }/>
 
         </Drawer>
+
+      {/* S N A C K B A R */}
+
+      <Snackbar 
+        open={this.state.completeSnack}
+        message={'SALE COMPLETE -  -  -  -  -  -  -  '+' $ '  + Number(this.state.snackSale).toFixed(2) + ' $ ' + Number(this.state.snackChange).toFixed(2)}
+        autoHideDuration={5000}
+        bodyStyle={styles.snackBody}
+        contentStyle={styles.snackContent}
+      />
+
 			</div>
 		)
 	}

@@ -25,13 +25,14 @@ export const styles = {
   tabs: {
   	backgroundColor: '#333 !important',
   	margin: 4,
+    marginBottom: '15px',
     width: '40%',
   },
   cat: {
   	fontFamily: 'Poppins, sans-serif',
   	fontWeight: 700,
   	fontSize: '1em !important',
-  	color: '#333 !important'
+  	color: '#EF5350'
   },
   punch: {
     fontFamily: 'Quicksand',
@@ -105,5 +106,17 @@ export const styles = {
     fontWeight: 700,
     fontSize: '16px',
     color: '#999'
+  },
+  snackBody: {
+    backgroundColor: '#00a78e',
+    border: '0px',
+    borderTop: '0px solid #00a78e',
+    borderRadius: '0px'
+  },
+  snackContent: {
+    color: '#eeeeee',
+    fontFamily: 'Quicksand',
+    fontWeight: 700,
+    fontSize: '16px',
   }
 }
