@@ -52,7 +52,8 @@
   color: #222;
 }
 .calc-top-div {
-  height: 200px;
+  height: 100px;
+  padding-top: 150px
 }
 .calc-mid-div {
   height: 400px;

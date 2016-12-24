@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Tracker } from 'meteor/tracker'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { GridList } from 'material-ui/GridList'
@@ -22,6 +23,7 @@ import Divider from 'material-ui/Divider'
 import Keyboard from 'material-ui/svg-icons/hardware/keyboard'
 import IconButton from 'material-ui/IconButton'
 import { styles } from './styles'
+import TextField from 'material-ui/TextField'
 
 class POS extends Component {
 	constructor(props) {
@@ -29,7 +31,10 @@ class POS extends Component {
     this.state = {
       bartender: '0',
       drawer: false,
-      calculator: false
+      calculator: false,
+      ct: '',
+      change: '',
+      itemsSold: ''
     }
 	}
   showMeBartenders() {
@@ -55,9 +60,10 @@ class POS extends Component {
         rippleStyle={styles.ripple}
         buttonStyle={styles.punch}
         onClick={()=>{
-          this.test(beer.price)
+          this.calcTotal(beer.price)
           this.openDrawer()
           this.handlePunch(beer._id, bartender, beer.name, beer.price)
+          this.logItems(beer.name)
           }
         }
       />
@@ -77,6 +83,7 @@ class POS extends Component {
     ))
   }
 
+
   removeItem(id,price) {
     Meteor.call('removeItemFromBasket', id)
     Session.set('totalAmount', Session.get('totalAmount')-Number(price) || 0)
@@ -84,7 +91,10 @@ class POS extends Component {
   who(name) {
     this.setState({bartender: name})
   }
-  test(price) {
+  logItems(item) {
+    this.setState({itemsSold: this.state.itemsSold + ', ' + item})
+  }
+  calcTotal(price) {
     let p = Number(price).toFixed(2)
     Session.set('totalAmount', Session.get('totalAmount')+Number(p))
     console.log(Session.get('totalAmount'))
@@ -102,26 +112,33 @@ class POS extends Component {
   handlePunch(id, owner, item, price) {
     Meteor.call('insertBasket', id, owner, item, price)
   }
-  handlePayment(owner, amount) {
-    Meteor.call('insertSales', owner, amount)
-    console.log(owner+amount)
-
-    this.setState({calculator: true})
+  openCalc(owner, amount) {
+    this.setState({calculator: !this.state.calculator})
   }
-  closeCalculator() {
+  checkout(owner, total, ct, ch, items) {
     this.setState({calculator: false})
+    Meteor.call('insertSales', owner, total, ct, ch, items)
     Meteor.call('removeAllItemsFromBasket')
     Session.set('totalAmount', 0)
+    Session.set('cashTendered', '')
+    this.clearCalc()
   }
-  returnCashTendered(n) {
-    Session.set('cashTendered', Session.get('cashTendered') + n)
-    console.log(Session.get('cashTendered'))
+  enterCashTendered(n) {
+    this.setState({ct: this.state.ct + n}, function() {
+      let change = Number(this.state.ct) - Number(Session.get('totalAmount'))
+      console.log(change.toFixed(2))
+      this.setState({change: change.toFixed(2)})
+    })
+
+    Session.get('cashTendered', this.state.ct)
+
   }
-  showCashTendered() {
-    Session.get('cashTendered')
+  showCashTendered(ct) {
+    console.log(ct)
   }
   clearCalc() {
-    Session.set('cashTendered', '')
+    this.setState({ct: ''})
+    this.setState({change: ''})
   }
 	render() {
 
@@ -185,33 +202,44 @@ class POS extends Component {
             title={'$ ' + Number(Session.get('totalAmount')).toFixed(2)}
             showMenuIconButton={true}
             titleStyle={styles.drawerTitle}
-            iconElementLeft={<IconButton onClick={()=> this.handlePayment(this.state.bartender,Number(Session.get('totalAmount')).toFixed(2))}><Keyboard/></IconButton>}
+            iconElementLeft={<IconButton onClick={()=> this.openCalc()}><Keyboard/></IconButton>}
             zDepth={3}
             />
             {this.showMeBasket()}
             <Divider/>
           {/*<RaisedButton label="CHECKOUT" onClick={()=> this.closeDrawer()} fullWidth={true}/>*/}
         </Drawer>
-        <Drawer width={305} open={this.state.calculator} openSecondary={true} containerStyle={styles.calculator}>
+        <Drawer width={340} open={this.state.calculator} openSecondary={true} containerStyle={styles.calculator}>
           <div className="calc-top-div">
-            <MenuItem primaryText="Cash Tendered" secondaryText={Session.get('cashTendered')}/>
-            <span className="cash-change">{Session.get('cashChange')}</span>
+            <MenuItem primaryText="Cash Tendered" secondaryText={'$ ' + this.state.ct} style={styles.calcItem_1}/>
+            <Divider/>
+            <MenuItem primaryText="Change" secondaryText={this.state.change} style={styles.calcItem_2}/>
           </div>
           <div className="calc-mid-div">
-            <FlatButton label='1' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('1')}/>
-            <FlatButton label='2' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('2')}/>
-            <FlatButton label='3' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('3')}/>
-            <FlatButton label='4' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('4')}/>
-            <FlatButton label='5' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('5')}/>
-            <FlatButton label='6' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('6')}/>
-            <FlatButton label='7' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('7')}/>
-            <FlatButton label='8' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('8')}/>
-            <FlatButton label='9' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('9')}/>
-            <FlatButton label='0' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('0')}/>
-            <FlatButton label='.' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.returnCashTendered('.')}/>
+            <FlatButton label='1' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('1')}/>
+            <FlatButton label='2' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('2')}/>
+            <FlatButton label='3' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('3')}/>
+            <FlatButton label='4' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('4')}/>
+            <FlatButton label='5' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('5')}/>
+            <FlatButton label='6' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('6')}/>
+            <FlatButton label='7' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('7')}/>
+            <FlatButton label='8' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('8')}/>
+            <FlatButton label='9' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('9')}/>
+            <FlatButton label='0' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('0')}/>
+            <FlatButton label='.' labelStyle={styles.calcLabel} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.enterCashTendered('.')}/>
             <FlatButton label='clear' labelStyle={styles.calcClear} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.clearCalc()}/>
           </div><br/>
-          <RaisedButton label='checkout' primary={true} fullWidth={true} labelStyle={styles.checkout} onClick={()=> this.closeCalculator()}/>
+
+          <RaisedButton label='checkout' primary={true} fullWidth={true} labelStyle={styles.checkout}
+            onClick={
+              ()=> this.checkout(
+                this.state.bartender,
+                Number(Session.get('totalAmount').toFixed(2)),
+                this.state.ct,
+                this.state.change,
+                this.state.itemsSold)
+              }/>
+
         </Drawer>
 			</div>
 		)

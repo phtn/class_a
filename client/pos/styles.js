@@ -67,10 +67,11 @@ export const styles = {
     padding: 0
   },
   calculator: {
-    opacity: .9
+    backgroundColor: '#000',
+    opacity: .8
   },
   calcButtons: {
-    minWidth: '100px',
+    minWidth: '110px',
     minHeight: '100px',
     color: '#00a78e',
     borderRadius: '100px'
@@ -92,5 +93,17 @@ export const styles = {
     fontFamily: 'Space Mono, monospace',
     fontSize: '30px',
     letterSpacing: '5px',
+  },
+  calcItem_1: {
+    fontFamily: 'Quicksand',
+    fontWeight: 700,
+    fontSize: '20px',
+    color: '#00a0af'
+  },
+  calcItem_2: {
+    fontFamily: 'Quicksand',
+    fontWeight: 700,
+    fontSize: '16px',
+    color: '#999'
   }
 }

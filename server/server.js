@@ -42,11 +42,14 @@ Meteor.startup(() => {
       })
       return basket
     },
-    insertSales(owner, amount) {
+    insertSales(owner, total, ct, ch, items) {
       const d = new Date()
       const sales = Sales.insert({
         owner: owner,
-        amount: amount,
+        total: total,
+        ct: ct,
+        ch: ch,
+        items: items,
         createdAt: d.toLocaleString(),
         updatedAt: d.toLocaleString()
       })
