@@ -114,9 +114,11 @@ export const styles = {
     borderRadius: '0px'
   },
   snackContent: {
-    color: '#eeeeee',
-    fontFamily: 'Quicksand',
+    color: '#222222',
+    fontFamily: 'Open Sans, sans-serif',
     fontWeight: 700,
     fontSize: '16px',
   }
+  
+
 }

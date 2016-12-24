@@ -33,7 +33,7 @@ class POS extends Component {
 		super(props)
     this.state = {
       bartender: '0',
-      subtotal: 0,
+      category: 'beers',
       drawer: false,
       calculator: false,
       ct: '',
@@ -43,16 +43,21 @@ class POS extends Component {
       snackSale: 0,
       snackChange: 0,
       checkoutStatus: false,
+      lift: {visibility: 'hidden'}
     }
+    this.timer = undefined
 	}
+  componentWilUnMount() {
+    clearTimeout(this.timer)
+  }
   showMeBartenders() {
 
     return this.props.bts.map((bt)=> (
       <Chip style={
-        this.state.bartender === bt._id ? styles.chipActive : styles.chip
+        this.state.bartender === bt.nickname ? styles.chipActive : styles.chip
       } key={bt._id} labelStyle={styles.chipLabel}>
         {/*<Avatar />*/}
-        <span onClick={()=>this.who(bt._id)}>{bt.nickname}</span>
+        <span onClick={()=>this.who(bt.nickname)}>{bt.nickname}</span>
       </Chip>
     ))
 
@@ -87,6 +92,16 @@ class POS extends Component {
     ))
   }
 
+  viewCategory() {
+    switch(this.state.category){
+    case 'beers':
+    return this.showMeBeers()
+    break
+    default:
+    this.showMeBeers()
+    }
+  }
+
 
   removeItem(id,price) {
     Meteor.call('removeItemFromBasket', id)
@@ -96,7 +111,7 @@ class POS extends Component {
     this.setState({bartender: name})
   }
   logItems(item) {
-    this.setState({itemsSold: this.state.itemsSold + ', ' + item})
+    this.setState({itemsSold: this.state.itemsSold + item + ', '})
   }
   calcTotal(price) {
     let p = Number(price).toFixed(2)
@@ -105,8 +120,9 @@ class POS extends Component {
   }
   closeDrawer() {
     this.setState({drawer: false})
-    Meteor.call('removeAllItemsFromBasket')
-    Session.set('totalAmount', 0.00)
+    console.log(Basket.find().count())
+    Basket.find().count() !== 0  ? this.setState({lift: {visibility: 'visible'}}) : this.setState({lift: {visibility: 'hidden'}})
+
   }
   handlePunch(id, owner, item, price) {
     if(this.state.bartender !== '0'){
@@ -124,12 +140,13 @@ class POS extends Component {
     this.setState({calculator: false})
     this.setState({snackSale: total})
     this.setState({snackChange: ch})
+    this.closeDrawer()
     Meteor.call('insertSales', owner, total, ct, ch, items)
     Meteor.call('removeAllItemsFromBasket')
-    Session.set('totalAmount', 0)
+    Session.set('totalAmount', 0.00)
+
     Session.set('cashTendered', '')
     this.clearCalc()
-    this.setState({drawer: false})
     this.setState({completeSnack: true})
 
   }
@@ -167,36 +184,32 @@ class POS extends Component {
           <a href="/admin"><Logo color={red400}/></a>
           NANOS</div>}/>
 
-
-
 				<div style={styles.wrapper}>
 					{this.showMeBartenders()}
 				</div>
-
 			</Card>
 
 			<div>
         <Toolbar style={styles.tabs}>
 
         <ToolbarGroup firstChild={true}>
-          <FlatButton labelStyle={styles.cat} label="BEER"/>
+          <FlatButton labelStyle={styles.cat} label="BEER" onClick={()=> this.setState({category: 'beers'})}/>
         </ToolbarGroup>
 
         <ToolbarGroup >
-          <FlatButton labelStyle={styles.cat} label="COCKTAILS" secondary={true}/>
+          <FlatButton labelStyle={styles.cat} label="COCKTAILS" secondary={true} onClick={()=> this.setState({category: 'cocktails'})}/>
         </ToolbarGroup>
 
         <ToolbarGroup lastChild={true}>
-          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true} onClick={()=> this.setState({completeSnack: true})}/>
+          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true} onClick={()=> this.setState({category: 'wine'})}/>
         </ToolbarGroup>
 
         </Toolbar>
 	    </div>
 
-
 				<GridList cols={2} >
           <div className="items-div">
-            {this.showMeBeers()}
+            {this.viewCategory()}
           </div>
           <div className="cashier-div">
           </div>
@@ -213,13 +226,12 @@ class POS extends Component {
             showMenuIconButton={true}
             titleStyle={styles.drawerTitle}
             iconElementLeft={<IconButton onClick={()=> this.openCalc()}><Keyboard/></IconButton>}
-            iconElementRight={<IconButton onClick={()=> this.setState({drawer: false})}><ArrowRight/></IconButton>}
-             
+            iconElementRight={<IconButton onClick={()=> this.closeDrawer()}><ArrowRight/></IconButton>}
+
             zDepth={3}
             />
             {this.showMeBasket()}
             <Divider/>
-          {/*<RaisedButton label="CHECKOUT" onClick={()=> this.closeDrawer()} fullWidth={true}/>*/}
         </Drawer>
         <Drawer width={340} open={this.state.calculator} openSecondary={true} containerStyle={styles.calculator}>
           <div className="calc-top-div">
@@ -242,10 +254,10 @@ class POS extends Component {
             <FlatButton label='clear' labelStyle={styles.calcClear} hoverColor="none" rippleColor='red' style={styles.calcButtons} onClick={()=> this.clearCalc()}/>
           </div><br/>
 
-          <RaisedButton 
-            label='checkout' 
-            primary={true} 
-            fullWidth={true} 
+          <RaisedButton
+            label='checkout'
+            primary={true}
+            fullWidth={true}
             labelStyle={styles.checkout}
             disabled={this.state.change < 0 || this.state.change == this.state.ct ? true : false}
             onClick={
@@ -261,14 +273,23 @@ class POS extends Component {
 
       {/* S N A C K B A R */}
 
-      <Snackbar 
+      <Snackbar
         open={this.state.completeSnack}
-        message={'SALE COMPLETE -  -  -  -  -  -  -  '+' $ '  + Number(this.state.snackSale).toFixed(2) + ' $ ' + Number(this.state.snackChange).toFixed(2)}
+        message={'SALE COMPLETE : '+' $ '  + Number(this.state.snackSale).toFixed(2) + ' | CHANGE : $ ' + Number(this.state.snackChange).toFixed(2)}
         autoHideDuration={5000}
         bodyStyle={styles.snackBody}
         contentStyle={styles.snackContent}
       />
 
+      {/*L I F T - F O L D E R*/}
+
+      <div className="lift" style={this.state.lift}></div>
+        <IconButton  style={{
+          position: 'absolute',
+          top: '9px',
+          right: 0,
+          visibility: this.state.drawer == true ? 'hidden' : 'visible'
+        }} onClick={()=> this.setState({drawer: true})}><ArrowLeft/></IconButton>
 			</div>
 		)
 	}

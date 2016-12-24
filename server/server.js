@@ -3,6 +3,7 @@ import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
 import { Basket } from '/collections/basket'
 import { Sales } from '/collections/sales'
+import { Events } from '/collections/events'
 
 Meteor.startup(() => {
   Meteor.methods({
@@ -54,6 +55,16 @@ Meteor.startup(() => {
         updatedAt: d.toLocaleString()
       })
       return sales
+    },
+    insertEvent(eventName, date) {
+      const d = new Date()
+      const events = Events.insert({
+        eventName: eventName,
+        date: date,
+        createdAt: d.toLocaleString(),
+        updatedAt: d.toLocaleString(),
+      })
+      return events
     },
     removeItemFromBasket(id) {
       Basket.remove({_id: id})
