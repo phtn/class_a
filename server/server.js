@@ -19,13 +19,14 @@ Meteor.startup(() => {
       return bartender
     },
 
-    insertBeer(beer, price, type, qty) {
+    insertBeer(beer, price, type, qty, img) {
       const d = new Date()
       const beers = Beers.insert({
         name: beer,
         price: price,
         type: type,
         qty: qty,
+        img: img,
         createdAt: d.toLocaleString()
       })
       return beers

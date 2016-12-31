@@ -28,6 +28,8 @@ import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
 import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import Snackbar from 'material-ui/Snackbar'
 
+import '../unicorn.css'
+
 class POS extends Component {
 	constructor(props) {
 		super(props)
@@ -66,16 +68,20 @@ class POS extends Component {
   showMeBeers() {
     let bartender = this.state.bartender
     return this.props.beers.map((beer)=> (
-      <RaisedButton key={beer._id}
-        label={beer.name}
-        backgroundColor='#eee'
-        labelStyle={styles.corona}
-        rippleStyle={styles.ripple}
-        buttonStyle={styles.punch}
-        onClick={()=>{
-          this.handlePunch(beer._id, bartender, beer.name, beer.price)
-          }
-        }/>
+      <button
+        className="button button-3d button-box button-jumbo"
+        style={{minHeight: '150px',
+                minWidth: '150px',
+                margin: 5,
+                marginBottom: 13,
+                backgroundColor: '#fff'
+              }}
+        key={beer._id}
+        onClick={() => this.handlePunch(beer._id, bartender, beer.name, beer.price)
+        }>
+        <img style={styles.beerButtons} src={beer.img} />
+      </button>
+
     ))
 
   }
@@ -93,29 +99,36 @@ class POS extends Component {
   }
 
   viewCategory() {
+
     switch(this.state.category){
     case 'beers':
     return this.showMeBeers()
     break
     default:
     this.showMeBeers()
+
     }
   }
 
 
   removeItem(id,price) {
     Meteor.call('removeItemFromBasket', id)
-    Session.set('totalAmount', Session.get('totalAmount') > 0 ? Session.get('totalAmount')-Number(price) : 0)
+    Session.setPersistent('totalAmount', Session.get('totalAmount') > 0 ? Session.get('totalAmount')-Number(price) : 0)
   }
   who(name) {
     this.setState({bartender: name})
+    this.setState({completeSnack: false})
+  }
+  setCategory(cat) {
+    this.setState({category: cat})
+    this.setState({completeSnack: false})
   }
   logItems(item) {
     this.setState({itemsSold: this.state.itemsSold + item + ', '})
   }
   calcTotal(price) {
     let p = Number(price).toFixed(2)
-    Session.set('totalAmount', Session.get('totalAmount') + Number(p))
+    Session.setPersistent('totalAmount', Session.get('totalAmount') + Number(p))
     console.log(Session.get('totalAmount'))
   }
   closeDrawer() {
@@ -130,11 +143,13 @@ class POS extends Component {
       this.setState({drawer: true})
       Meteor.call('insertBasket', id, owner, item, price)
       this.logItems(item)
-      this.setState({completeSnack: false})
     }
+    this.setState({completeSnack: false})
   }
   openCalc(owner, amount) {
-    this.setState({calculator: !this.state.calculator})
+    if (Basket.find().count() !== 0) {
+      this.setState({calculator: !this.state.calculator})
+    }
   }
   checkout(owner, total, ct, ch, items) {
     this.setState({calculator: false})
@@ -143,11 +158,12 @@ class POS extends Component {
     this.closeDrawer()
     Meteor.call('insertSales', owner, total, ct, ch, items)
     Meteor.call('removeAllItemsFromBasket')
-    Session.set('totalAmount', 0.00)
+    Session.setPersistent('totalAmount', 0.00)
 
     Session.set('cashTendered', '')
     this.clearCalc()
     this.setState({completeSnack: true})
+    this.setState({lift: {visibility: 'hidden'}})
 
   }
   enterCashTendered(n) {
@@ -193,15 +209,15 @@ class POS extends Component {
         <Toolbar style={styles.tabs}>
 
         <ToolbarGroup firstChild={true}>
-          <FlatButton labelStyle={styles.cat} label="BEER" onClick={()=> this.setState({category: 'beers'})}/>
+          <FlatButton labelStyle={styles.cat} label="BEER" onClick={()=> this.setCategory('beers') }/>
         </ToolbarGroup>
 
         <ToolbarGroup >
-          <FlatButton labelStyle={styles.cat} label="COCKTAILS" secondary={true} onClick={()=> this.setState({category: 'cocktails'})}/>
+          <FlatButton labelStyle={styles.cat} label="COCKTAILS" secondary={true} onClick={()=> this.setCategory('cocktails') }/>
         </ToolbarGroup>
 
         <ToolbarGroup lastChild={true}>
-          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true} onClick={()=> this.setState({category: 'wine'})}/>
+          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true} onClick={()=> this.setCategory('wine') }/>
         </ToolbarGroup>
 
         </Toolbar>
@@ -288,7 +304,7 @@ class POS extends Component {
           position: 'absolute',
           top: '9px',
           right: 0,
-          visibility: this.state.drawer == true ? 'hidden' : 'visible'
+          visibility: this.state.lift == {visibility: 'hidden'} ? 'hidden' : 'visible'
         }} onClick={()=> this.setState({drawer: true})}><ArrowLeft/></IconButton>
 			</div>
 		)

@@ -1,0 +1,13 @@
+{
+	"name": "NANOSYS",
+	"icons": [
+		{
+			"src": "/public/img/react.png",
+			"type": "image/png",
+			"sizes": "192x192",
+			"density": 4.0
+		}
+	],
+	"orientation": "landscape",
+	"display": "standalone"
+}

@@ -51,13 +51,20 @@ const handleInsertBartender = ()=> {
   document.getElementById('codename-input')
 }
 const handleInsertBeer = () => {
-  Meteor.call('insertBeer', Session.get('beer-name-input'), Session.get('beer-price-input'), Session.get('beer-type-input'), Session.get('beer-qty-input'))
+  Meteor.call('insertBeer', Session.get('beer-name-input'), Session.get('beer-price-input'), Session.get('beer-type-input'), Session.get('beer-qty-input'), Session.get('setBeerImage'))
 }
 const handleChangeBartender = (e) => {
   Session.set('codename-input', e.target.value)
 }
 const handleChangeBeerName = (e) => {
   Session.set('beer-name-input', e.target.value)
+  switch(e.target.value){
+    case 'corona' || 'Corona' || 'CORONA':
+      Session.set('setBeerImage', '/public/img/corona.png')
+      break;
+    default:
+      Session.set('setBeerImage', '')
+  }
 }
 const handleChangeBeerPrice = (e) => {
   price = e.target.value

@@ -118,7 +118,12 @@ export const styles = {
     fontFamily: 'Open Sans, sans-serif',
     fontWeight: 700,
     fontSize: '16px',
+  },
+  beerButtons: {
+    minHeight: '100px',
+    minWidth: '100px',
+    maxHeight: '100px',
+    minWidth: '100px'
   }
-  
 
 }

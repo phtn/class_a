@@ -22,6 +22,7 @@ class SALES extends Component {
   constructor(props){
     super(props)
   }
+
   viewEachSale() {
     return this.props.sale.map((each)=> (
       <TableRow key={each._id} selectable={false} displayBorder={false}>
@@ -34,6 +35,7 @@ class SALES extends Component {
       </TableRow>
     ))
   }
+  
   render(){
     return (
       <Mui muiTheme={getMuiTheme(light)}>
@@ -41,6 +43,7 @@ class SALES extends Component {
       <AppBar title={'LIVE DATA'} showMenuIconButton={false}/>
 
       <Table>
+
         <TableHeader displaySelectAll={false} adjustForCheckbox={false} headerStyle={styles.thead}>
         <TableRow>
           <TableHeaderColumn>NAME</TableHeaderColumn>
@@ -54,11 +57,7 @@ class SALES extends Component {
         <TableBody stripedRows={true} displayRowCheckbox={false}>
           {this.viewEachSale()}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableRowColumn>XXX</TableRowColumn>
-          </TableRow>
-        </TableFooter>
+
       </Table>
       </div>
       </Mui>
