@@ -27,6 +27,9 @@ Meteor.startup(() => {
         type: type,
         qty: qty,
         img: img,
+        cost: 1.50,
+        sold: 0,
+        inStock: 30, 
         createdAt: d.toLocaleString()
       })
       return beers
@@ -66,6 +69,9 @@ Meteor.startup(() => {
         updatedAt: d.toLocaleString(),
       })
       return events
+    },
+    removeAllSales() {
+      Sales.remove({})
     },
     removeItemFromBasket(id) {
       Basket.remove({_id: id})

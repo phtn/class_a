@@ -60,7 +60,16 @@ const handleChangeBeerName = (e) => {
   Session.set('beer-name-input', e.target.value)
   switch(e.target.value){
     case 'corona' || 'Corona' || 'CORONA':
-      Session.set('setBeerImage', '/public/img/corona.png')
+      Session.set('setBeerImage', '../../img/corona.png')
+      break;
+    case 'heineken' || 'Heineken' || 'HEINEKEN':
+      Session.set('setBeerImage', '../../img/heineken.png')
+      break;
+    case 'millerlite' || 'Millerlite' || 'MILLERLITE':
+      Session.set('setBeerImage', '../../img/millerlite.png')
+      break;
+    case 'budlight' || 'Budlight' || 'BUDLIGHT':
+      Session.set('setBeerImage', '../../img/heineken.png')
       break;
     default:
       Session.set('setBeerImage', '')

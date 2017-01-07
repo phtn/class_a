@@ -16,6 +16,7 @@ import { createContainer } from 'meteor/react-meteor-data'
 import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
 import { Basket } from '/collections/basket'
+import { Sales } from '/collections/sales'
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
 import AppBar from 'material-ui/AppBar'
@@ -133,7 +134,7 @@ class POS extends Component {
   }
   closeDrawer() {
     this.setState({drawer: false})
-    console.log(Basket.find().count())
+    //console.log(Basket.find().count())
     Basket.find().count() !== 0  ? this.setState({lift: {visibility: 'visible'}}) : this.setState({lift: {visibility: 'hidden'}})
 
   }
@@ -164,7 +165,7 @@ class POS extends Component {
     this.clearCalc()
     this.setState({completeSnack: true})
     this.setState({lift: {visibility: 'hidden'}})
-
+		this.returnTotalSales()
   }
   enterCashTendered(n) {
     this.setState({ct: this.state.ct + n}, function() {
@@ -183,6 +184,13 @@ class POS extends Component {
     this.setState({ct: ''})
     this.setState({change: ''})
   }
+	returnTotalSales() {
+		let totalSales = 0
+		Sales.find().map((doc)=> {
+			totalSales += doc.total
+			Session.setPersistent('returnTotalSales', 'LIVE TOTAL SALES: $' + totalSales)
+		})
+	}
 	render() {
 
     Meteor.subscribe('showBartenders')
