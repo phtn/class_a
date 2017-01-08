@@ -21,6 +21,7 @@ import Divider from 'material-ui/Divider'
 import LinearProgress from 'material-ui/LinearProgress'
 import {Card, CardActions, CardHeader, CardText, CardMedia} from 'material-ui/Card'
 import { GridList } from 'material-ui/GridList'
+import Dialog from 'material-ui/Dialog'
 import { styles } from './sales.style.js'
 //import '../../public/micon/css/micon.min.css'
 
@@ -34,7 +35,7 @@ class SALES extends Component {
 
     this.state = {
       drawerOpen: false,
-
+      dialogOpen: false,
     }
   }
   /* E A C H S A L E */
@@ -113,6 +114,10 @@ class SALES extends Component {
       </div>
     )
   }
+
+  handleCloseDialog() {
+    this.setState({dialogOpen: false})
+  }
   render(){
 
     return (
@@ -180,6 +185,15 @@ class SALES extends Component {
           </div>
       </Drawer>
 
+      /* D I A L O G */
+      <Dialog
+        title="Dialog With Actions"
+        modal={false}
+        open={this.state.dialogOpen}
+        onRequestClose={()=> this.handleCloseDialog()}>
+      </Dialog>
+      /* D I A L O G  -  end */
+      
       </div>
       </Mui>
     )
