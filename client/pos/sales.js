@@ -3,6 +3,8 @@ import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import { createContainer } from 'meteor/react-meteor-data'
 import { Sales } from '/collections/sales'
+import { Beers } from '/collections/beers'
+import { Bartenders } from '/collections/bartenders'
 import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
   from 'material-ui/Table'
 import Mui from 'material-ui/styles/MuiThemeProvider'
@@ -11,6 +13,7 @@ import light from 'material-ui/styles/baseThemes/lightBaseTheme'
 import AppBar from 'material-ui/AppBar'
 import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
 import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import Code from 'material-ui/svg-icons/action/code'
 import IconButton from 'material-ui/IconButton'
 import Drawer from 'material-ui/Drawer'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -18,53 +21,26 @@ import Divider from 'material-ui/Divider'
 import LinearProgress from 'material-ui/LinearProgress'
 import {Card, CardActions, CardHeader, CardText, CardMedia} from 'material-ui/Card'
 import { GridList } from 'material-ui/GridList'
+import { styles } from './sales.style.js'
+//import '../../public/micon/css/micon.min.css'
+
 
 Meteor.subscribe('showSales')
 
 
-const styles = {
-  thead: {
-    fontFamily: 'Roboto, sans-serif',
-    fontWeight: 500
-  },
-  invDiv: {
-    //display: 'inline',
-    margin: 20,
-    textAlign: 'center'
-  },
-  pbar: {
-    transform: 'rotate(270deg)',
-    height: '30px',
-    width: '40px',
-    display: 'block',
-    margin: '10px auto'
-  },
-  beerLabel: {
-    fontSize: '12px',
-    textAlign: 'center'
-  },
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-  },
-  hr: {
-    width: '100%'
-  }
-}
-
 class SALES extends Component {
   constructor(props){
     super(props)
+
     this.state = {
       drawerOpen: false,
 
     }
   }
-
-  viewEachSale() {
+  /* E A C H S A L E */
+  showEachSale() {
     return this.props.sale.map((each)=> (
-      <TableRow key={each._id} selectable={false} displayBorder={false}>
+      <TableRow key={each._id} selectable={false} displayBorder={true}>
         <TableRowColumn>{each.owner}</TableRowColumn>
         <TableRowColumn>{each.total}</TableRowColumn>
         <TableRowColumn>{each.ct}</TableRowColumn>
@@ -76,12 +52,13 @@ class SALES extends Component {
   }
   pullMenuButton() {
     return (
-      <IconButton onClick={()=>this.handleDrawerToggle()}><ArrowLeft/></IconButton>
+      <IconButton onClick={()=>this.handleDrawerToggle()}><Code/></IconButton>
     )
   }
   handleRemoveAll() {
     Meteor.call('removeAllSales')
   }
+  /* T O T A L S A L E S */
   returnTotalSale() {
     let t = 0
     this.props.sale.map((doc)=> {
@@ -94,40 +71,44 @@ class SALES extends Component {
   handleDrawerToggle() {
     this.setState({drawerOpen: ! this.state.drawerOpen})
   }
-  showInventory() {
+  /* I N V E N T O R Y */
+  showInventoryItems() {
+      return this.props.beers.map((beer)=>(
+          <div key={beer._id} style={styles.invDiv}>
+            <LinearProgress mode='determinate' value={80} style={styles.pbar}/>
+            <span style={styles.beerLabel}>{beer.name}</span>
+            <hr style={styles.hr}/>
+            32 / 100
+          </div>
+
+      )
+    )
+  }
+  inventoryWrapper() {
     return (
       <div style={styles.root}>
       <GridList cols={4} >
-        <div style={styles.invDiv}>
-          <LinearProgress mode='determinate' value={80} style={styles.pbar}/>
-          <span style={styles.beerLabel}>CORONA</span>
-          <hr style={styles.hr}/>
-          32 / 100
-        </div>
-        <div style={styles.invDiv}>
-          <LinearProgress mode='determinate' value={90} style={styles.pbar}/>
-          <span style={styles.beerLabel}>HEINEKEN</span>
-          <hr/>
-          45
-        </div>
-        <div style={styles.invDiv}>
-          <LinearProgress mode='determinate' value={40} style={styles.pbar}/>
-          <span style={styles.beerLabel}>MILLER LITE </span>
-          <hr/>
-          6
-        </div>
-        <div style={styles.invDiv}>
-          <LinearProgress mode='determinate' value={40} style={styles.pbar}/>
-          <span style={styles.beerLabel}>BUD LIGHT </span>
-          <hr/>
-          98
-        </div>
-        <div style={styles.invDiv}>
-          <LinearProgress mode='determinate' value={40} style={styles.pbar}/>
-          <span style={styles.beerLabel}>BUD LIGHT </span>
-          <hr/>
-          98
-        </div>
+        {this.showInventoryItems()}
+      </GridList>
+      </div>
+    )
+  }
+  /* B A R T E N D E R S */
+  showAllBartenders() {
+    return this.props.bartenders.map((bartender) => (
+      <div style={styles.bartenderDiv} key={bartender._id}>
+        <span style={styles.beerLabel}>{bartender.nickname}</span>
+        <Divider />
+        <span style={styles.salesLabel}>{bartender.sales}</span>
+      </div>
+    ))
+  }
+
+  bartendersWrapper() {
+    return (
+      <div style={styles.root}>
+      <GridList cols={4} >
+        {this.showAllBartenders()}
       </GridList>
       </div>
     )
@@ -141,7 +122,9 @@ class SALES extends Component {
         title={this.returnTotalSale()}
         showMenuIconButton={false}
         iconElementRight={this.pullMenuButton()}
-        zDepth={1}/>
+        zDepth={1}
+        style={styles.appBarMain}
+        titleStyle={styles.apTitleMain}/>
 
       <Table>
 
@@ -155,36 +138,42 @@ class SALES extends Component {
           <TableHeaderColumn>TIMESTAMP</TableHeaderColumn>
         </TableRow>
         </TableHeader>
-        <TableBody stripedRows={true} displayRowCheckbox={false}>
-          {this.viewEachSale()}
+        <TableBody stripedRows={false} displayRowCheckbox={false}>
+          {this.showEachSale()}
         </TableBody>
 
       </Table>
 
       {/* D R A W E R */}
-      <Drawer width={700} openSecondary={true} open={this.state.drawerOpen}>
+      <Drawer width={700} openSecondary={true} open={this.state.drawerOpen}
+        containerStyle={styles.drawerContainer}>
         <AppBar
           title='General Summary'
           showMenuIconButton={false}
           onTitleTouchTap={()=>this.handleDrawerToggle()}
-          zDepth={3}/>
+          zDepth={1}
+          style={styles.appBarDrawer}
+          titleStyle={styles.drawerTitleSales}/>
           <div>
-            <Card>
+            <Card style={styles.cardClearance}>
               <CardHeader
                 title='EVENT'/>
 
             </Card>
             <Divider/>
-            <Card>
+            <Card style={styles.cardClearance}>
               <CardHeader
                 title='BARTENDERS'/>
 
+              <CardMedia children={this.bartendersWrapper()}>
+              </CardMedia>
+
             </Card>
             <Divider/>
-            <Card>
+            <Card style={styles.cardClearance}>
               <CardHeader
                 title='INVENTORY'/>
-              <CardMedia children={this.showInventory()}>
+              <CardMedia children={this.inventoryWrapper()}>
               </CardMedia>
 
             </Card>
@@ -199,11 +188,15 @@ class SALES extends Component {
 
 
 SALES.propTypes = {
-  sale: React.PropTypes.array
+  sale: React.PropTypes.array,
+  beers: React.PropTypes.array,
+  bartenders: React.PropTypes.array
 }
 
 export default createContainer(()=> {
   return {
-    sale: Sales.find().fetch().reverse()
+    sale: Sales.find().fetch().reverse(),
+    beers: Beers.find().fetch(),
+    bartenders: Bartenders.find().fetch()
   }
 }, SALES)

@@ -30,11 +30,12 @@ import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import Snackbar from 'material-ui/Snackbar'
 
 import '../unicorn.css'
-
+let arr = []
 class POS extends Component {
 	constructor(props) {
 		super(props)
-    this.state = {
+
+		this.state = {
       bartender: '0',
       category: 'beers',
       drawer: false,
@@ -48,11 +49,9 @@ class POS extends Component {
       checkoutStatus: false,
       lift: {visibility: 'hidden'}
     }
-    this.timer = undefined
+
 	}
-  componentWilUnMount() {
-    clearTimeout(this.timer)
-  }
+
   showMeBartenders() {
 
     return this.props.bts.map((bt)=> (
@@ -63,7 +62,6 @@ class POS extends Component {
         <span onClick={()=>this.who(bt.nickname)}>{bt.nickname}</span>
       </Chip>
     ))
-
   }
 
   showMeBeers() {
@@ -82,9 +80,7 @@ class POS extends Component {
         }>
         <img style={styles.beerButtons} src={beer.img} />
       </button>
-
     ))
-
   }
 
   showMeBasket() {
@@ -110,8 +106,6 @@ class POS extends Component {
 
     }
   }
-
-
   removeItem(id,price) {
     Meteor.call('removeItemFromBasket', id)
     Session.setPersistent('totalAmount', Session.get('totalAmount') > 0 ? Session.get('totalAmount')-Number(price) : 0)
@@ -144,6 +138,9 @@ class POS extends Component {
       this.setState({drawer: true})
       Meteor.call('insertBasket', id, owner, item, price)
       this.logItems(item)
+
+			arr.push(id)
+			console.log(arr)
     }
     this.setState({completeSnack: false})
   }
