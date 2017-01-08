@@ -1,7 +1,9 @@
 export const styles = {
   thead: {
     fontFamily: 'Roboto, sans-serif',
-    fontWeight: 500
+    fontWeight: 700,
+    color: 'rgb(0, 188, 212)',
+    letterSpacing: '2px'
   },
   invDiv: {
     //display: 'inline',
@@ -71,6 +73,9 @@ export const styles = {
     fontFamily: 'Roboto, sans-serif',
     fontWeight: '100',
     fontSize: '2em',
-    color: '#333'
+    color: '#eee'
+  },
+  tableBodySales: {
+    backgroundColor: '#eee'
   }
 }

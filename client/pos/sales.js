@@ -63,7 +63,7 @@ class SALES extends Component {
     let t = 0
     this.props.sale.map((doc)=> {
        t += doc.total
-       Session.setPersistent('returnTotalSale', '[ Live data ] : $ ' + parseFloat(t).toFixed(2))
+       Session.setPersistent('returnTotalSale', 'Total Sales : $ ' + parseFloat(t).toFixed(2))
      }
     )
     return Session.get('returnTotalSale')
@@ -126,16 +126,16 @@ class SALES extends Component {
         style={styles.appBarMain}
         titleStyle={styles.apTitleMain}/>
 
-      <Table>
+      <Table style={styles.tableBodySales}>
 
         <TableHeader displaySelectAll={false} adjustForCheckbox={false} headerStyle={styles.thead}>
         <TableRow>
-          <TableHeaderColumn>NAME</TableHeaderColumn>
-          <TableHeaderColumn>TOTAL</TableHeaderColumn>
-          <TableHeaderColumn>TENDERED</TableHeaderColumn>
-          <TableHeaderColumn>CHANGE</TableHeaderColumn>
-          <TableHeaderColumn>ITEMS</TableHeaderColumn>
-          <TableHeaderColumn>TIMESTAMP</TableHeaderColumn>
+          <TableHeaderColumn style={styles.thead}>NAME</TableHeaderColumn>
+          <TableHeaderColumn style={styles.thead}>TOTAL</TableHeaderColumn>
+          <TableHeaderColumn style={styles.thead}>TENDERED</TableHeaderColumn>
+          <TableHeaderColumn style={styles.thead}>CHANGE</TableHeaderColumn>
+          <TableHeaderColumn style={styles.thead}>ITEMS</TableHeaderColumn>
+          <TableHeaderColumn style={styles.thead}>TIMESTAMP</TableHeaderColumn>
         </TableRow>
         </TableHeader>
         <TableBody stripedRows={false} displayRowCheckbox={false}>
@@ -145,7 +145,7 @@ class SALES extends Component {
       </Table>
 
       {/* D R A W E R */}
-      <Drawer width={700} openSecondary={true} open={this.state.drawerOpen}
+      <Drawer width={650} openSecondary={true} open={this.state.drawerOpen}
         containerStyle={styles.drawerContainer}>
         <AppBar
           title='General Summary'
