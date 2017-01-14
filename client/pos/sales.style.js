@@ -2,8 +2,9 @@ export const styles = {
   thead: {
     fontFamily: 'Roboto, sans-serif',
     fontWeight: 700,
-    color: 'rgb(0, 188, 212)',
-    letterSpacing: '2px'
+    color: 'rgb(0, 0, 0)',
+    letterSpacing: '2px',
+    borderBottom: '1px solid gray'
   },
   invDiv: {
     //display: 'inline',
