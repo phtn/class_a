@@ -13,10 +13,14 @@ import {red400} from 'material-ui/styles/colors';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton'
 import { createContainer } from 'meteor/react-meteor-data'
+/* C O L L E C T I O N S */
 import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
+import { Mixes } from '/collections/mixes'
+import { Wines } from '/collections/wines'
 import { Basket } from '/collections/basket'
 import { Sales } from '/collections/sales'
+
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
 import AppBar from 'material-ui/AppBar'
@@ -27,6 +31,11 @@ import { styles } from './styles'
 import TextField from 'material-ui/TextField'
 import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
 import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
+import FaceIcon from 'material-ui/svg-icons/action/face'
+import BeerIcon from 'material-ui/svg-icons/maps/local-drink'
+import MixsIcon from 'material-ui/svg-icons/maps/local-bar'
+import ShotsIcon from 'material-ui/svg-icons/social/whatshot'
+import SodaIcon from 'material-ui/svg-icons/editor/bubble-chart'
 import Snackbar from 'material-ui/Snackbar'
 
 import '../unicorn.css'
@@ -47,7 +56,8 @@ class POS extends Component {
       snackSale: 0,
       snackChange: 0,
       checkoutStatus: false,
-      lift: {visibility: 'hidden'}
+      lift: {visibility: 'hidden'},
+			settingsDrawer: false
     }
 
 	}
@@ -82,6 +92,25 @@ class POS extends Component {
       </button>
     ))
   }
+	/*M I X E S*/
+	showMeMixes() {
+		let bartender = this.state.bartender
+		return this.props.mixes.map((mix)=> (
+			<button
+				className="button button-3d button-box button-jumbo"
+				style={{minHeight: '150px',
+								minWidth: '150px',
+								margin: 5,
+								marginBottom: 13,
+								backgroundColor: '#fff'
+							}}
+				key={mix._id}
+				onClick={() => this.handlePunch(mix._id, bartender, mix.name, mix.price)
+				}>
+
+			</button>
+		))
+	}/*mixs*/
 
   showMeBasket() {
     return this.props.basket.map((item)=> (
@@ -101,6 +130,18 @@ class POS extends Component {
     case 'beers':
     return this.showMeBeers()
     break
+		case 'mixes':
+		return this.showMeMixes()
+		break
+		case 'wine':
+		return this.showMeWines()
+		break
+		case 'shots':
+		return this.showMeShots()
+		break
+		case 'soda':
+		return this.showMeSoda()
+		break
     default:
     this.showMeBeers()
 
@@ -210,9 +251,8 @@ class POS extends Component {
 	}
 	render() {
 
-    Meteor.subscribe('showBartenders')
-    Meteor.subscribe('showBasket')
-    Meteor.subscribe('showSales')
+
+
     Session.setDefault('totalAmount', 0)
     Session.setDefault('cashTendered', '')
 
@@ -223,13 +263,29 @@ class POS extends Component {
 					zDepth={2}
 					children={<div className="brand-div">
           <a href="/admin"><Logo color={red400}/></a>
-          NANOS</div>}/>
+          NANOS
+
+					</div>}/>
 
 				<div style={styles.wrapper}>
+					<span className="fa fa-database fa-2x" style={styles.settings}></span>
 					{this.showMeBartenders()}
 				</div>
 			</Card>
 
+			{/* S E T T I N G S */}
+			<Drawer open={this.state.settingsDrawer} containerStyle={styles.settingsDrawerContainer} width={300}>
+				<header style={styles.settingsHeader}>settings</header>
+				<Divider />
+				<MenuItem primaryText="Add Bartender" leftIcon={<FaceIcon color="#555"/>} style={styles.smenu} />
+				<Divider/>
+				<MenuItem primaryText="Add Beer" leftIcon={<BeerIcon color="#555"/>} style={styles.smenu} />
+				<MenuItem primaryText="Add Mixes" leftIcon={<MixsIcon color="#555"/>} style={styles.smenu} />
+				<MenuItem primaryText="Add Shots" leftIcon={<ShotsIcon color="#555"/>} style={styles.smenu} />
+				<MenuItem primaryText="Add Wine" leftIcon={<MixsIcon color="#555"/>} style={styles.smenu} />
+				<MenuItem primaryText="Add Soda" leftIcon={<SodaIcon color="#555"/>} style={styles.smenu} />
+			</Drawer>
+			{/* set1 */}
 			<div>
         <Toolbar style={styles.tabs}>
 
@@ -238,7 +294,7 @@ class POS extends Component {
         </ToolbarGroup>
 
         <ToolbarGroup >
-          <FlatButton labelStyle={styles.cat} label="COCKTAILS" secondary={true} onClick={()=> this.setCategory('cocktails') }/>
+          <FlatButton labelStyle={styles.cat} label="MIXES" secondary={true} onClick={()=> this.setCategory('mixes') }/>
         </ToolbarGroup>
 
         <ToolbarGroup lastChild={true}>
@@ -340,6 +396,7 @@ POS.propTypes = {
   bts: React.PropTypes.array,
   beers: React.PropTypes.array,
   basket: React.PropTypes.array,
+	mixes: React.PropTypes.array,
 	wines: React.PropTypes.array,
 };
 
@@ -348,6 +405,7 @@ export default createContainer(()=> {
     bts: Bartenders.find().fetch(),
     beers: Beers.find().fetch(),
     basket: Basket.find().fetch(),
-		wines: Wines.find().fetch()
+		mixes: Mixes.find().fetch(),
+		wines: Wines.find().fetch(),
   }
 }, POS)

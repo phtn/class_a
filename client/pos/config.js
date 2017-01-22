@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import Mui from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import dark from 'material-ui/styles/baseThemes/darkBaseTheme'
+import light from 'material-ui/styles/baseThemes/lightBaseTheme'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 import TextField from 'material-ui/TextField'
 import { orange500, blue500, red400 } from 'material-ui/styles/colors'
@@ -14,10 +14,14 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { GridList } from 'material-ui/GridList'
 import { createContainer } from 'meteor/react-meteor-data'
 import { Beers } from '/collections/beers'
+import { Wines } from '/collections/wines'
 
 Meteor.subscribe('showBartenders')
 Meteor.subscribe('showBeers')
-
+Meteor.subscribe('showMixes')
+Meteor.subscribe('showWines')
+Meteor.subscribe('showBasket')
+Meteor.subscribe('showSales')
 
 const addStyles = {
   hint: {
@@ -29,10 +33,10 @@ const addStyles = {
     color: orange500,
     fontFamily: 'Play',
     fontWeight: 700,
-    fontSize: '25px'
+    fontSize: '14px'
   },
   text: {
-    margin: '10px'
+    marginLeft: 2
   },
   button: {
     fontFamily: 'Quicksand !important',
@@ -89,16 +93,15 @@ const handleChangeBeerQty = (e) => {
 /* W I N E S */
 
 const Config = ({}) => (
-  <Mui muiTheme={getMuiTheme(dark)}>
+  <Mui muiTheme={getMuiTheme(light)}>
   <div>
-    <GridList cols={3}>
+    <GridList cols={4}>
 
 
     <Card className="add-cards">
     <Paper
       zDepth={2}
       children={<div className="brand-div">
-        <span className="fa fa-user-circle fa-2x config-icon"></span>
         <span className="config-header">ADD BARTENDER</span>
       </div>}
       />
@@ -164,6 +167,7 @@ const Config = ({}) => (
     </CardActions>
     </Card>
 
+    {/* W I N E C A R D */}
     <Card className="add-cards">
     <Paper
       zDepth={2}
@@ -172,12 +176,28 @@ const Config = ({}) => (
       </div>}/>
 
     <TextField
-      hintText="Shiraz..."
+      hintText="Argiano..."
       hintStyle={addStyles.hint}
       floatingLabelText= 'Wine'
       floatingLabelStyle={addStyles.floating}
       style={addStyles.text}
-      onChange={handleChangeBeerName}
+      onChange={null}
+    />
+    <TextField
+      hintText="Merlot..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Type'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <TextField
+      hintText="Red..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Category'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
     />
     <TextField
       hintText="4.5..."
@@ -185,7 +205,89 @@ const Config = ({}) => (
       floatingLabelText= 'Price'
       floatingLabelStyle={addStyles.floating}
       style={addStyles.text}
-      onChange={handleChangeBeerName}
+      onChange={null}
+    />
+    <TextField
+      hintText="1..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Quantity'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <CardActions>
+      <RaisedButton style={addStyles.button} onClick={handleInsertBeer} label='Add' default={true}/>
+    </CardActions>
+    </Card>
+
+    {/* S H O T S  C A R D */}
+    <Card className="add-cards">
+    <Paper
+      zDepth={2}
+      children={<div className="brand-div">
+        <span className="config-header">ADD SHOTS</span>
+      </div>}/>
+
+    <TextField
+      hintText="Patron..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Shots'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <TextField
+      hintText="4.5..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Price'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <TextField
+      hintText="1..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Quantity'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <CardActions>
+      <RaisedButton style={addStyles.button} onClick={handleInsertBeer} label='Add' default={true}/>
+    </CardActions>
+    </Card>
+
+    {/* S H O T S  C A R D */}
+    <Card className="add-cards">
+    <Paper
+      zDepth={2}
+      children={<div className="brand-div">
+        <span className="config-header">ADD SHOTS</span>
+      </div>}/>
+
+    <TextField
+      hintText="Patron..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Shots'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <TextField
+      hintText="4.5..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Price'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
+    />
+    <TextField
+      hintText="1..."
+      hintStyle={addStyles.hint}
+      floatingLabelText= 'Quantity'
+      floatingLabelStyle={addStyles.floating}
+      style={addStyles.text}
+      onChange={null}
     />
     <CardActions>
       <RaisedButton style={addStyles.button} onClick={handleInsertBeer} label='Add' default={true}/>

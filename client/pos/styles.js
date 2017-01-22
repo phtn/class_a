@@ -3,6 +3,27 @@ export const styles = {
     margin: 4,
     backgroundColor: '#111',
   },
+  settings: {
+    margin: 5,
+    color: '#777',
+    cursor: 'pointer',
+  },
+  settingsHeader: {
+    color: '#333',
+    fontFamily: 'Roboto, sans-serif',
+    fontWeight: 500,
+    fontSize: '12px',
+    textTransform: "uppercase",
+    letterSpacing: "2px",
+    left: 90
+  },
+  settingsDrawerContainer: {
+    backgroundColor: '#8996a0'
+  },
+  smenu: {
+    color: '#efe9e5',
+    fontFamily: 'Play, sans-serif'
+  },
   chipActive: {
     margin: 4,
     backgroundColor: '#00a78e',

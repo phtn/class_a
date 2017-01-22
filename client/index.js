@@ -8,7 +8,6 @@ import { Router, Route, Link, browserHistory } from 'react-router'
 
 import Nav from './nav'
 import Main from './main'
-import Cnc from './cnc'
 import POS from './pos/pos'
 import Admin from './pos/admin'
 import Config from './pos/config'

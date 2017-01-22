@@ -36,7 +36,7 @@ Meteor.startup(() => {
       return beers
     },
 
-    insertWines(wine, price, type, cat, qty) {
+    insertWines(wine, type, cat, price, qty) {
       const d = new Date()
       const wines = Wines.insert({
         name: wine,
