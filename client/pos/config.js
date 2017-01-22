@@ -45,7 +45,7 @@ const addStyles = {
     marginRight: '10px !important',
   }
 }
-
+/* B A R T E N D E R S */
 const handleInsertBartender = ()=> {
   Meteor.call('insertBartender', Session.get('codename-input'))
   document.getElementById('codename-input')
@@ -56,6 +56,7 @@ const handleInsertBeer = () => {
 const handleChangeBartender = (e) => {
   Session.set('codename-input', e.target.value)
 }
+/* B E E R S */
 const handleChangeBeerName = (e) => {
   Session.set('beer-name-input', e.target.value)
   switch(e.target.value){
@@ -85,6 +86,7 @@ const handleChangeBeerType = (e) => {
 const handleChangeBeerQty = (e) => {
   Session.set('beer-qty-input', e.target.value)
 }
+/* W I N E S */
 
 const Config = ({}) => (
   <Mui muiTheme={getMuiTheme(dark)}>
@@ -120,7 +122,6 @@ const Config = ({}) => (
     <Paper
       zDepth={2}
       children={<div className="brand-div">
-        <span className="fa fa-beer fa-2x config-icon"></span>
         <span className="config-header">ADD BEER</span>
       </div>}
       />
@@ -167,7 +168,6 @@ const Config = ({}) => (
     <Paper
       zDepth={2}
       children={<div className="brand-div">
-        <span className="fa fa-glass fa-2x config-icon"></span>
         <span className="config-header">ADD WINE</span>
       </div>}/>
 

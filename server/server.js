@@ -4,6 +4,7 @@ import { Beers } from '/collections/beers'
 import { Basket } from '/collections/basket'
 import { Sales } from '/collections/sales'
 import { Events } from '/collections/events'
+import { Wines } from '/collections/wines'
 
 Meteor.startup(() => {
   Meteor.methods({
@@ -25,14 +26,28 @@ Meteor.startup(() => {
         name: beer,
         price: price,
         type: type,
-        qty: qty,
+        qty: parseInt(qty),
         img: img,
         cost: 1.50,
         sold: 0,
-        inStock: 30, 
+        inStock: parseInt(qty),
         createdAt: d.toLocaleString()
       })
       return beers
+    },
+
+    insertWines(wine, price, type, cat, qty) {
+      const d = new Date()
+      const wines = Wines.insert({
+        name: wine,
+        price: price,
+        type: type,
+        cat: cat,
+        qty: parseInt(qty),
+        inStock: parseInt(qty),
+        createdAt: d.toLocaleString()
+      })
+      return wines
     },
 
     insertBasket(id, owner, item, price) {
@@ -78,6 +93,14 @@ Meteor.startup(() => {
     },
     removeAllItemsFromBasket() {
       Basket.remove({})
+    },
+    updateBeerCount(id, count) {
+      const beerCountUpdate = Beers.update({_id: id}, {
+        $inc: {
+          inStock: -(parseInt(count))
+        }
+      })
+      return beerCountUpdate
     }
   })
 });

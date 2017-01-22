@@ -91,7 +91,7 @@ class POS extends Component {
         key={item._id}
         primaryText={item.item}
         secondaryText={'$ ' + item.price}
-        onClick={()=> this.removeItem(item._id,item.price)} />
+        onClick={()=> this.removeItem(item._id,item.price, item.id)} />
     ))
   }
 
@@ -106,10 +106,11 @@ class POS extends Component {
 
     }
   }
-  removeItem(id,price) {
+  removeItem(id,price,beerId) {
     Meteor.call('removeItemFromBasket', id)
     Session.setPersistent('totalAmount', Session.get('totalAmount') > 0 ? Session.get('totalAmount')-Number(price) : 0)
-  }
+		this.decrementBeerCount(beerId)
+	}
   who(name) {
     this.setState({bartender: name})
     this.setState({completeSnack: false})
@@ -119,13 +120,31 @@ class POS extends Component {
     this.setState({completeSnack: false})
   }
   logItems(item) {
-    this.setState({itemsSold: this.state.itemsSold + item + ', '})
+    this.setState({itemsSold: this.state.itemsSold + item + ' '})
   }
+	clearItems() {
+		this.setState({itemsSold: ''})
+	}
+	logBeerCount(id, value) {
+		localStorage.setItem(id, Number(localStorage.getItem(id)) + value)
+	}
+	decrementBeerCount(id) {
+		localStorage.setItem(id, Number(localStorage.getItem(id)) - 1)
+	}
   calcTotal(price) {
     let p = Number(price).toFixed(2)
     Session.setPersistent('totalAmount', Session.get('totalAmount') + Number(p))
     console.log(Session.get('totalAmount'))
   }
+	updateBeerInStock() {
+		for (let key in localStorage) {
+			if (key.length === 17){
+				Meteor.call('updateBeerCount', key, parseInt(localStorage.getItem(key)))
+				console.log(localStorage.getItem(key), key)
+				localStorage.setItem(key, 0)
+			}
+		}
+	}
   closeDrawer() {
     this.setState({drawer: false})
     //console.log(Basket.find().count())
@@ -133,14 +152,13 @@ class POS extends Component {
 
   }
   handlePunch(id, owner, item, price) {
+
     if(this.state.bartender !== '0'){
       this.calcTotal(price)
       this.setState({drawer: true})
       Meteor.call('insertBasket', id, owner, item, price)
       this.logItems(item)
-
-			arr.push(id)
-			console.log(arr)
+			this.logBeerCount(id, 1)
     }
     this.setState({completeSnack: false})
   }
@@ -163,6 +181,8 @@ class POS extends Component {
     this.setState({completeSnack: true})
     this.setState({lift: {visibility: 'hidden'}})
 		this.returnTotalSales()
+		this.clearItems()
+		this.updateBeerInStock()
   }
   enterCashTendered(n) {
     this.setState({ct: this.state.ct + n}, function() {
@@ -319,13 +339,15 @@ class POS extends Component {
 POS.propTypes = {
   bts: React.PropTypes.array,
   beers: React.PropTypes.array,
-  basket: React.PropTypes.array
+  basket: React.PropTypes.array,
+	wines: React.PropTypes.array,
 };
 
 export default createContainer(()=> {
   return {
     bts: Bartenders.find().fetch(),
     beers: Beers.find().fetch(),
-    basket: Basket.find().fetch()
+    basket: Basket.find().fetch(),
+		wines: Wines.find().fetch()
   }
 }, POS)

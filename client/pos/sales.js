@@ -23,10 +23,10 @@ import {Card, CardActions, CardHeader, CardText, CardMedia} from 'material-ui/Ca
 import { GridList } from 'material-ui/GridList'
 import Dialog from 'material-ui/Dialog'
 import { styles } from './sales.style.js'
-//import '../../public/micon/css/micon.min.css'
 
 
 Meteor.subscribe('showSales')
+
 
 
 class SALES extends Component {
@@ -34,11 +34,13 @@ class SALES extends Component {
     super(props)
 
     this.state = {
-      drawerOpen: false,
+      drawerOpen: true,
       dialogOpen: false,
     }
   }
+
   /* E A C H S A L E */
+
   showEachSale() {
     return this.props.sale.map((each)=> (
       <TableRow key={each._id} selectable={false} displayBorder={true}>
@@ -75,11 +77,11 @@ class SALES extends Component {
   /* I N V E N T O R Y */
   showInventoryItems() {
       return this.props.beers.map((beer)=>(
-          <div key={beer._id} style={styles.invDiv}>
-            <LinearProgress mode='determinate' value={80} style={styles.pbar}/>
+          <div key={beer._id} style={styles.itemDiv} onClick={()=>this.decrement(beer._id)}>
+            <LinearProgress mode='determinate' value={beer.inStock} max={beer.qty} style={styles.pbar}/>
             <span style={styles.beerLabel}>{beer.name}</span>
-            <hr style={styles.hr}/>
-            32 / 100
+            <Divider/>
+            {beer.inStock}
           </div>
 
       )
@@ -94,10 +96,13 @@ class SALES extends Component {
       </div>
     )
   }
+  handleInventoryClick(id) {
+    console.log(id)
+  }
   /* B A R T E N D E R S */
   showAllBartenders() {
     return this.props.bartenders.map((bartender) => (
-      <div style={styles.bartenderDiv} key={bartender._id}>
+      <div style={styles.itemDiv} key={bartender._id}>
         <span style={styles.beerLabel}>{bartender.nickname}</span>
         <Divider />
         <span style={styles.salesLabel}>{bartender.sales}</span>
@@ -117,6 +122,10 @@ class SALES extends Component {
 
   handleCloseDialog() {
     this.setState({dialogOpen: false})
+  }
+  decrement(id){
+    Meteor.call('minusOne', id)
+    console.log(id)
   }
   render(){
 
@@ -163,6 +172,9 @@ class SALES extends Component {
             <Card style={styles.cardClearance}>
               <CardHeader
                 title='EVENT'/>
+              <CardActions>
+                <RaisedButton>submit</RaisedButton>
+              </CardActions>
 
             </Card>
             <Divider/>
@@ -185,15 +197,15 @@ class SALES extends Component {
           </div>
       </Drawer>
 
-      /* D I A L O G */
+      {/* D I A L O G */}
       <Dialog
         title="Dialog With Actions"
         modal={false}
         open={this.state.dialogOpen}
         onRequestClose={()=> this.handleCloseDialog()}>
       </Dialog>
-      /* D I A L O G  -  end */
-      
+      {/* D I A L O G  -  end */}
+
       </div>
       </Mui>
     )

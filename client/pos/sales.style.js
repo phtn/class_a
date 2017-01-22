@@ -7,7 +7,7 @@ export const styles = {
   },
   invDiv: {
     //display: 'inline',
-    margin: 20,
+    margin: 30,
     textAlign: 'center'
   },
   pbar: {
@@ -41,13 +41,13 @@ export const styles = {
     marginLeft: '40px',
     position: '50px',
   },
-  bartenderDiv: {
+  itemDiv: {
     margin: '30px',
     textAlign: 'center',
     border: '1px solid #ccc',
     borderRadius: '2px',
-    minWidth: '120px',
-    padding: 10,
+    minWidth: '90px',
+    padding: 5,
     cursor: 'pointer',
   },
   salesLabel: {
