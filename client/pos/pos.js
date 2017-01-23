@@ -37,9 +37,13 @@ import MixsIcon from 'material-ui/svg-icons/maps/local-bar'
 import ShotsIcon from 'material-ui/svg-icons/social/whatshot'
 import SodaIcon from 'material-ui/svg-icons/editor/bubble-chart'
 import Snackbar from 'material-ui/Snackbar'
+import Dialog from 'material-ui/Dialog'
+
 
 import '../unicorn.css'
-let arr = []
+
+let activeBar = [] // Active Bartender List ( Logged In )
+
 class POS extends Component {
 	constructor(props) {
 		super(props)
@@ -57,13 +61,14 @@ class POS extends Component {
       snackChange: 0,
       checkoutStatus: false,
       lift: {visibility: 'hidden'},
-			settingsDrawer: false
+			settingsDrawer: false,
+      openLogIn: true,
+      idInput: ''
     }
 
 	}
 
   showMeBartenders() {
-
     return this.props.bts.map((bt)=> (
       <Chip style={
         this.state.bartender === bt.nickname ? styles.chipActive : styles.chip
@@ -79,16 +84,11 @@ class POS extends Component {
     return this.props.beers.map((beer)=> (
       <button
         className="button button-3d button-box button-jumbo"
-        style={{minHeight: '150px',
-                minWidth: '150px',
-                margin: 5,
-                marginBottom: 13,
-                backgroundColor: '#fff'
-              }}
+        style={styles.beerButton}
         key={beer._id}
         onClick={() => this.handlePunch(beer._id, bartender, beer.name, beer.price)
         }>
-        <img style={styles.beerButtons} src={beer.img} />
+        <img style={styles.beerButtonImg} src={beer.img} />
       </button>
     ))
   }
@@ -98,12 +98,7 @@ class POS extends Component {
 		return this.props.mixes.map((mix)=> (
 			<button
 				className="button button-3d button-box button-jumbo"
-				style={{minHeight: '150px',
-								minWidth: '150px',
-								margin: 5,
-								marginBottom: 13,
-								backgroundColor: '#fff'
-							}}
+				style={styles.beerButton}
 				key={mix._id}
 				onClick={() => this.handlePunch(mix._id, bartender, mix.name, mix.price)
 				}>
@@ -249,9 +244,17 @@ class POS extends Component {
 			Session.setPersistent('returnTotalSales', 'LIVE TOTAL SALES: $' + totalSales)
 		})
 	}
+  handleLogin(){
+    this.setState({idInput: '1'})
+    console.log(this.state.idInput)
+  }  
+
 	render() {
 
-
+    
+    const signInActions = [
+      <FlatButton label="login" onClick={()=>this.handleLogin()}/>
+    ]
 
     Session.setDefault('totalAmount', 0)
     Session.setDefault('cashTendered', '')
@@ -266,10 +269,25 @@ class POS extends Component {
           NANOS
 
 					</div>}/>
-
+      {/* B A R T E N D E R S  bts1 */}
 				<div style={styles.wrapper}>
-					<span className="fa fa-database fa-2x" style={styles.settings}></span>
-					{this.showMeBartenders()}
+					<span 
+            className="fa fa-sign-in fa-2x" 
+            style={styles.settings}
+            onClick={()=>console.log('1')}></span>
+					
+          {this.showMeBartenders()}
+
+          <Dialog
+            title="Bartender Login" 
+            open={this.state.openLogIn}
+            actions={signInActions}
+            contentStyle={styles.logincontentStyle}>
+            <span style={styles.idInput}>000</span>
+            <hr />
+            <FlatButton 
+              label="2"/>
+          </Dialog>
 				</div>
 			</Card>
 

@@ -97,7 +97,7 @@
 * The default values for the .button class
 */
 .button {
-  color: #666666;
+  color: #333;
   background-color: #eeeeee;
   border-color: #eeeeee;
   font-weight: 300;
@@ -669,8 +669,8 @@
     text-shadow: none;
     -webkit-transition-property: all;
             transition-property: all;
-    -webkit-transition-duration: .3s;
-            transition-duration: .3s;
+    -webkit-transition-duration: .1s;
+            transition-duration: .1s;
     opacity: .3; }
   .button-borderless.button-primary {
     color: #1b9af7; }

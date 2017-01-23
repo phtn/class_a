@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
 import Mui from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import light from 'material-ui/styles/baseThemes/lightBaseTheme'
+import dark from 'material-ui/styles/baseThemes/darkBaseTheme'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 import TextField from 'material-ui/TextField'
 import { orange500, blue500, red400 } from 'material-ui/styles/colors'
@@ -93,7 +93,7 @@ const handleChangeBeerQty = (e) => {
 /* W I N E S */
 
 const Config = ({}) => (
-  <Mui muiTheme={getMuiTheme(light)}>
+  <Mui muiTheme={getMuiTheme(dark)}>
   <div>
     <GridList cols={4}>
 

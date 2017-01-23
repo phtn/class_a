@@ -3,6 +3,21 @@ export const styles = {
     margin: 4,
     backgroundColor: '#111',
   },
+  logincontentStyle: {
+    width: '350px'
+  },
+  idInput: {
+    margin: '0 45%',
+    color: 'cyan',
+    fontSize: '24px'
+  },
+  beerButton: {
+    minHeight: '150px',
+    minWidth: '150px',
+    margin: 5,
+    marginBottom: 13,
+    backgroundColor: '#fff'
+  },
   settings: {
     margin: 5,
     color: '#777',
@@ -140,7 +155,7 @@ export const styles = {
     fontWeight: 700,
     fontSize: '16px',
   },
-  beerButtons: {
+  beerButtonImg: {
     minHeight: '100px',
     minWidth: '100px',
     maxHeight: '100px',
