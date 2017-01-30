@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import { Bartenders } from '../collections/bartenders'
 import { Beers } from '../collections/beers'
+import { Shots } from '../collections/shots'
 import { Mixes } from '/collections/mixes'
 import { Wines } from '/collections/wines'
 import { Basket } from '/collections/basket'
@@ -15,6 +16,9 @@ Meteor.publish('showBeers', ()=> {
 })
 Meteor.publish('showMixes', ()=> {
     return Mixes.find()
+})
+Meteor.publish('showShots', ()=> {
+    return Shots.find()
 })
 Meteor.publish('showWines', ()=> {
     return Wines.find()

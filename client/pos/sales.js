@@ -22,6 +22,8 @@ import LinearProgress from 'material-ui/LinearProgress'
 import {Card, CardActions, CardHeader, CardText, CardMedia} from 'material-ui/Card'
 import { GridList } from 'material-ui/GridList'
 import Dialog from 'material-ui/Dialog'
+import TextField from 'material-ui/TextField'
+
 import { styles } from './sales.style.js'
 
 
@@ -77,7 +79,7 @@ class SALES extends Component {
   /* I N V E N T O R Y */
   showInventoryItems() {
       return this.props.beers.map((beer)=>(
-          <div key={beer._id} style={styles.itemDiv} onClick={()=>this.decrement(beer._id)}>
+          <div key={beer._id} style={styles.itemDiv}>
             <LinearProgress mode='determinate' value={beer.inStock} max={beer.qty} style={styles.pbar}/>
             <span style={styles.beerLabel}>{beer.name}</span>
             <Divider/>
@@ -105,7 +107,7 @@ class SALES extends Component {
       <div style={styles.itemDiv} key={bartender._id}>
         <span style={styles.beerLabel}>{bartender.nickname}</span>
         <Divider />
-        <span style={styles.salesLabel}>{bartender.sales}</span>
+        <span style={styles.salesLabel}>{parseFloat(localStorage.getItem(bartender.nickname)).toFixed(2)}</span>
       </div>
     ))
   }
@@ -113,7 +115,7 @@ class SALES extends Component {
   bartendersWrapper() {
     return (
       <div style={styles.root}>
-      <GridList cols={4} >
+      <GridList cols={3} >
         {this.showAllBartenders()}
       </GridList>
       </div>
@@ -140,7 +142,9 @@ class SALES extends Component {
         style={styles.appBarMain}
         titleStyle={styles.apTitleMain}/>
 
+      <br /><br /><br />
       <Table style={styles.tableBodySales}>
+
 
         <TableHeader displaySelectAll={false} adjustForCheckbox={false} headerStyle={styles.thead}>
         <TableRow>
@@ -152,7 +156,7 @@ class SALES extends Component {
           <TableHeaderColumn style={styles.thead}>TIMESTAMP</TableHeaderColumn>
         </TableRow>
         </TableHeader>
-        <TableBody stripedRows={false} displayRowCheckbox={false}>
+        <TableBody stripedRows={false} displayRowCheckbox={false} style={styles.tableBody}>
           {this.showEachSale()}
         </TableBody>
 
@@ -173,7 +177,8 @@ class SALES extends Component {
               <CardHeader
                 title='EVENT'/>
               <CardActions>
-                <RaisedButton>submit</RaisedButton>
+                <TextField hintText="Event Name"/>
+                <RaisedButton>NEW EVENT</RaisedButton>
               </CardActions>
 
             </Card>

@@ -4,7 +4,7 @@ export const styles = {
     fontWeight: 700,
     color: 'rgb(0, 0, 0)',
     letterSpacing: '2px',
-    borderBottom: '1px solid gray'
+    borderBottom: '1px solid gray',
   },
   invDiv: {
     //display: 'inline',
@@ -63,7 +63,9 @@ export const styles = {
   cursor: 'pointer',
   },
   appBarMain: {
-  backgroundImage: 'url(../../img/brickwall.png)'
+  backgroundImage: 'url(../../img/brickwall.png)',
+  position: 'fixed',
+  marginBottom: 5
   },
   drawerTitleSales: {
     fontFamily: 'Roboto, sans-serif',
@@ -77,6 +79,6 @@ export const styles = {
     color: '#eee'
   },
   tableBodySales: {
-    backgroundColor: '#eee'
+    backgroundColor: '#eee',
   }
 }

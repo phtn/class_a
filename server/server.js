@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
+import { Shots } from '/collections/shots'
 import { Basket } from '/collections/basket'
 import { Sales } from '/collections/sales'
 import { Events } from '/collections/events'
@@ -20,20 +21,34 @@ Meteor.startup(() => {
       return bartender
     },
 
-    insertBeer(beer, price, type, qty, img) {
+    insertBeer(beer, price, type, qty) {
       const d = new Date()
       const beers = Beers.insert({
         name: beer,
         price: price,
         type: type,
         qty: parseInt(qty),
-        img: img,
+        img: '',
         cost: 1.50,
         sold: 0,
         inStock: parseInt(qty),
         createdAt: d.toLocaleString()
       })
       return beers
+    },
+    /* SHOTS */
+    insertShot(shot, price, type, qty) {
+      const d = new Date()
+      const shots = Shots.insert({
+        name: shot,
+        price: price,
+        type: type,
+        qty: parseInt(qty),
+        inStock: parseInt(qty),
+        img: '',
+        createdAt: d.toLocaleString()
+      })
+      return shots
     },
 
     insertWines(wine, type, cat, price, qty) {
@@ -49,6 +64,7 @@ Meteor.startup(() => {
       })
       return wines
     },
+
 
     insertBasket(id, owner, item, price) {
       const d = new Date()

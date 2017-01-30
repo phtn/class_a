@@ -11,6 +11,7 @@ import Main from './main'
 import POS from './pos/pos'
 import Admin from './pos/admin'
 import Config from './pos/pos.config'
+//import Config from './pos/config'
 import Sales from './pos/sales'
 
 injectTapEventPlugin(); // touchscreen plugin

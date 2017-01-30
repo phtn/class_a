@@ -3,20 +3,43 @@ export const styles = {
     margin: 4,
     backgroundColor: '#111',
   },
-  logincontentStyle: {
-    width: '350px'
+  loginContentStyle: {
+    width: '350px',
+    textAlign: 'center'
   },
   idInput: {
-    margin: '0 45%',
-    color: 'cyan',
-    fontSize: '24px'
+    color: '#222',
+    fontSize: '24px',
+    lineHeight: '60px',
+    margin: 3
+  },
+  firstAttempt: {
+    color: '#222',
+    fontSize: '24px',
+    lineHeight: '60px',
+    margin: 3
+  },
+  loginBtnDiv: {
+    maxWidth: '160px',
+    width: '50%',
+    margin: '0 auto'
+  },
+  loginButtons: {
+    minWidth: '50px',
+    minHeight: '50px',
+    color: '#00a78e',
+    borderRadius: '100px'
   },
   beerButton: {
     minHeight: '150px',
     minWidth: '150px',
     margin: 5,
     marginBottom: 13,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    textAlign: 'center',
+  },
+  gridTileCaption: {
+    fontFamily: 'Play',
   },
   settings: {
     margin: 5,
@@ -155,7 +178,7 @@ export const styles = {
     fontWeight: 700,
     fontSize: '16px',
   },
-  beerButtonImg: {
+  buttonImg: {
     minHeight: '100px',
     minWidth: '100px',
     maxHeight: '100px',

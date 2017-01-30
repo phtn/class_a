@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Tracker } from 'meteor/tracker'
 import { Meteor } from 'meteor/meteor'
 import { Session } from 'meteor/session'
-import { GridList } from 'material-ui/GridList'
+import { GridList, GridTile } from 'material-ui/GridList'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import Chip from 'material-ui/Chip'
@@ -16,6 +16,7 @@ import { createContainer } from 'meteor/react-meteor-data'
 /* C O L L E C T I O N S */
 import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
+import { Shots } from '/collections/shots'
 import { Mixes } from '/collections/mixes'
 import { Wines } from '/collections/wines'
 import { Basket } from '/collections/basket'
@@ -62,12 +63,12 @@ class POS extends Component {
       checkoutStatus: false,
       lift: {visibility: 'hidden'},
 			settingsDrawer: false,
-      openLogIn: true,
+      openLogIn: false,
       idInput: ''
     }
 
 	}
-
+	/* B A R T E N D E R S */
   showMeBartenders() {
     return this.props.bts.map((bt)=> (
       <Chip style={
@@ -78,7 +79,7 @@ class POS extends Component {
       </Chip>
     ))
   }
-
+	/* B E E R S */
   showMeBeers() {
     let bartender = this.state.bartender
     return this.props.beers.map((beer)=> (
@@ -88,24 +89,32 @@ class POS extends Component {
         key={beer._id}
         onClick={() => this.handlePunch(beer._id, bartender, beer.name, beer.price)
         }>
-        <img style={styles.beerButtonImg} src={beer.img} />
+      <GridTile
+				title={beer.name}
+				actionIcon={<Chip>{beer.price}</Chip>}
+				style={styles.gridTileCaption}></GridTile>
       </button>
     ))
   }
-	/*M I X E S*/
-	showMeMixes() {
+	/* SHOTS */
+	showMeShots() {
 		let bartender = this.state.bartender
-		return this.props.mixes.map((mix)=> (
+		return this.props.shots.map((shot)=> (
 			<button
 				className="button button-3d button-box button-jumbo"
 				style={styles.beerButton}
-				key={mix._id}
-				onClick={() => this.handlePunch(mix._id, bartender, mix.name, mix.price)
+				key={shot._id}
+				onClick={() => this.handlePunch(shot._id, bartender, shot.name, shot.price)
 				}>
-
+				<GridTile
+					title={shot.name}
+					actionIcon={<Chip>{shot.price}</Chip>}
+					style={styles.gridTileCaption}></GridTile>
 			</button>
 		))
-	}/*mixs*/
+	}
+	/*M I X E S*/
+	//
 
   showMeBasket() {
     return this.props.basket.map((item)=> (
@@ -125,14 +134,14 @@ class POS extends Component {
     case 'beers':
     return this.showMeBeers()
     break
+		case 'shots':
+		return this.showMeShots()
+		break
 		case 'mixes':
 		return this.showMeMixes()
 		break
 		case 'wine':
 		return this.showMeWines()
-		break
-		case 'shots':
-		return this.showMeShots()
 		break
 		case 'soda':
 		return this.showMeSoda()
@@ -158,6 +167,9 @@ class POS extends Component {
   logItems(item) {
     this.setState({itemsSold: this.state.itemsSold + item + ' '})
   }
+	logEachSale(name, amount) {
+		localStorage.setItem(name, Number(localStorage.getItem(name)) + amount)
+	}
 	clearItems() {
 		this.setState({itemsSold: ''})
 	}
@@ -218,6 +230,7 @@ class POS extends Component {
     this.setState({lift: {visibility: 'hidden'}})
 		this.returnTotalSales()
 		this.clearItems()
+		this.logEachSale(owner, total)
 		this.updateBeerInStock()
   }
   enterCashTendered(n) {
@@ -247,12 +260,20 @@ class POS extends Component {
   handleLogin(){
     this.setState({idInput: '1'})
     console.log(this.state.idInput)
-  }  
+  }
+	handleLoginPunch(n){
+		if(this.state.idInput.length !== 4) {
+			this.setState({idInput: this.state.idInput + n}, function(){
+				console.log(this.state.idInput)
+			})
+		}
+	}
 
 	render() {
 
-    
+
     const signInActions = [
+			<FlatButton label="cancel" onClick={()=>this.handleLogin()}/>,
       <FlatButton label="login" onClick={()=>this.handleLogin()}/>
     ]
 
@@ -271,23 +292,39 @@ class POS extends Component {
 					</div>}/>
       {/* B A R T E N D E R S  bts1 */}
 				<div style={styles.wrapper}>
-					<span 
-            className="fa fa-sign-in fa-2x" 
+					<span
+            className="fa fa-sign-in fa-2x"
             style={styles.settings}
             onClick={()=>console.log('1')}></span>
-					
+
           {this.showMeBartenders()}
 
+					{/* DIALOG */}
           <Dialog
-            title="Bartender Login" 
+            title=""
             open={this.state.openLogIn}
             actions={signInActions}
-            contentStyle={styles.logincontentStyle}>
-            <span style={styles.idInput}>000</span>
-            <hr />
-            <FlatButton 
-              label="2"/>
+            contentStyle={styles.loginContentStyle}>
+	            <span style={styles.firstAttempt} className="fa fa-circle"></span>
+							<span style={styles.idInput} className="fa fa-circle"></span>
+							<span style={styles.idInput} className="fa fa-circle"></span>
+							<span style={styles.idInput} className="fa fa-circle"></span>
+						<br/>
+            <Divider />
+						<div style={styles.loginBtnDiv}>
+	            <FlatButton label="7" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(7)}/>
+							<FlatButton label="8" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(8)}/>
+							<FlatButton label="9" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(9)}/>
+							<FlatButton label="4" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(4)}/>
+							<FlatButton label="5" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(5)}/>
+							<FlatButton label="6" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(6)}/>
+							<FlatButton label="1" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(1)}/>
+							<FlatButton label="2" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(2)}/>
+							<FlatButton label="3" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(3)}/>
+							<FlatButton label="0" style={styles.loginButtons} onClick={()=> this.handleLoginPunch(0)}/>
+						</div>
           </Dialog>
+
 				</div>
 			</Card>
 
@@ -309,6 +346,10 @@ class POS extends Component {
 
         <ToolbarGroup firstChild={true}>
           <FlatButton labelStyle={styles.cat} label="BEER" onClick={()=> this.setCategory('beers') }/>
+        </ToolbarGroup>
+
+				<ToolbarGroup firstChild={true}>
+          <FlatButton labelStyle={styles.cat} label="SHOTS" onClick={()=> this.setCategory('shots') }/>
         </ToolbarGroup>
 
         <ToolbarGroup >
@@ -414,6 +455,7 @@ POS.propTypes = {
   bts: React.PropTypes.array,
   beers: React.PropTypes.array,
   basket: React.PropTypes.array,
+	shots: React.PropTypes.array,
 	mixes: React.PropTypes.array,
 	wines: React.PropTypes.array,
 };
@@ -423,6 +465,7 @@ export default createContainer(()=> {
     bts: Bartenders.find().fetch(),
     beers: Beers.find().fetch(),
     basket: Basket.find().fetch(),
+		shots: Shots.find().fetch(),
 		mixes: Mixes.find().fetch(),
 		wines: Wines.find().fetch(),
   }
