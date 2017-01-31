@@ -66,14 +66,14 @@ Meteor.startup(() => {
     },
 
 
-    insertBasket(id, owner, item, price) {
+    insertBasket(id, owner, item, price, type) {
       const d = new Date()
       const basket = Basket.insert({
         id: id,
         owner: owner,
         item: item,
         price: price,
-        status: 'NOT_PAID',
+        type: type,
         createdAt: d.toLocaleString()
       })
       return basket

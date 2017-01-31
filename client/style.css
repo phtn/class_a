@@ -1,5 +1,6 @@
 body {
   background-color: #212121;
+  background: url('../../img/brickwall.png');
 }
 .brand-div {
 	margin: 5px;
@@ -19,6 +20,11 @@ body {
 	font-size: 2em;
 	color: #EF5350;
 	margin: 10px;
+}
+strong {
+	text-transform: uppercase;
+	font-size: 14px;
+	color: #999;
 }
 hr {
 	
