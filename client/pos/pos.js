@@ -71,7 +71,7 @@ class POS extends Component {
 	/* B A R T E N D E R S */
   showMeBartenders() {
     return this.props.bts.map((bt)=> (
-      <Chip style={
+      <Chip className="animated flipInX" style={
         this.state.bartender === bt.nickname ? styles.chipActive : styles.chip
       } key={bt._id} labelStyle={styles.chipLabel}>
         {/*<Avatar />*/}
@@ -84,10 +84,10 @@ class POS extends Component {
     let bartender = this.state.bartender
     return this.props.beers.map((beer)=> (
       <button
-        className="button button-3d button-box button-jumbo"
+        className="button button-3d button-box button-jumbo animated flipInX"
         style={styles.beerButton}
         key={beer._id}
-        onClick={() => this.handlePunch(beer._id, bartender, beer.name, beer.price)
+        onClick={() => this.handlePunch(beer._id, bartender, beer.name, beer.price, beer.type)
         }>
       <GridTile
 				title={beer.name}
@@ -101,10 +101,10 @@ class POS extends Component {
 		let bartender = this.state.bartender
 		return this.props.shots.map((shot)=> (
 			<button
-				className="button button-3d button-box button-jumbo"
+				className="button button-3d button-box button-jumbo animated flipInX"
 				style={styles.beerButton}
 				key={shot._id}
-				onClick={() => this.handlePunch(shot._id, bartender, shot.name, shot.price)
+				onClick={() => this.handlePunch(shot._id, bartender, shot.name, shot.price, shot.type)
 				}>
 				<GridTile
 					title={shot.name}
@@ -122,7 +122,7 @@ class POS extends Component {
       <MenuItem
         style={styles.menu}
         key={item._id}
-        primaryText={item.item}
+        primaryText={<span>{item.item} <strong>{item.type}</strong></span>}
         secondaryText={'$ ' + item.price}
         onClick={()=> this.removeItem(item._id,item.price, item.id)} />
     ))
@@ -199,12 +199,12 @@ class POS extends Component {
     Basket.find().count() !== 0  ? this.setState({lift: {visibility: 'visible'}}) : this.setState({lift: {visibility: 'hidden'}})
 
   }
-  handlePunch(id, owner, item, price) {
+  handlePunch(id, owner, item, price, type) {
 
     if(this.state.bartender !== '0'){
       this.calcTotal(price)
       this.setState({drawer: true})
-      Meteor.call('insertBasket', id, owner, item, price)
+      Meteor.call('insertBasket', id, owner, item, price, type)
       this.logItems(item)
 			this.logBeerCount(id, 1)
     }
@@ -271,7 +271,6 @@ class POS extends Component {
 
 	render() {
 
-
     const signInActions = [
 			<FlatButton label="cancel" onClick={()=>this.handleLogin()}/>,
       <FlatButton label="login" onClick={()=>this.handleLogin()}/>
@@ -285,7 +284,7 @@ class POS extends Component {
 			<Card className="top-card">
 				<Paper
 					zDepth={2}
-					children={<div className="brand-div">
+					children={<div className="brand-div animated fadeInDownBig">
           <a href="/admin"><Logo color={red400}/></a>
           NANOS
 
@@ -344,27 +343,27 @@ class POS extends Component {
 			<div>
         <Toolbar style={styles.tabs}>
 
-        <ToolbarGroup firstChild={true}>
+        <ToolbarGroup className="animated fadeInLeft" firstChild={true}>
           <FlatButton labelStyle={styles.cat} label="BEER" onClick={()=> this.setCategory('beers') }/>
         </ToolbarGroup>
 
-				<ToolbarGroup firstChild={true}>
+				<ToolbarGroup className="animated fadeInLeft" firstChild={true}>
           <FlatButton labelStyle={styles.cat} label="SHOTS" onClick={()=> this.setCategory('shots') }/>
         </ToolbarGroup>
 
-        <ToolbarGroup >
-          <FlatButton labelStyle={styles.cat} label="MIXES" secondary={true} onClick={()=> this.setCategory('mixes') }/>
+        <ToolbarGroup className="animated fadeInLeft" >
+          <FlatButton labelStyle={styles.cat} label="MIXES" onClick={()=> this.setCategory('mixes') }/>
         </ToolbarGroup>
 
-        <ToolbarGroup lastChild={true}>
-          <FlatButton labelStyle={styles.cat} label="WINE" secondary={true} onClick={()=> this.setCategory('wine') }/>
+        <ToolbarGroup className="animated fadeInLeft" lastChild={true}>
+          <FlatButton labelStyle={styles.cat} label="WINE" onClick={()=> this.setCategory('wine') }/>
         </ToolbarGroup>
 
         </Toolbar>
 	    </div>
 
 				<GridList cols={2} >
-          <div className="items-div">
+          <div className="items-div animated fadeIn">
             {this.viewCategory()}
           </div>
           <div className="cashier-div">
