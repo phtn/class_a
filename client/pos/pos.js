@@ -122,7 +122,7 @@ class POS extends Component {
       <MenuItem
         style={styles.menu}
         key={item._id}
-        primaryText={<span>{item.item} <strong>{item.type}</strong></span>}
+        primaryText={<span>{item.item} &middot; <strong>{item.type}</strong></span>}
         secondaryText={'$ ' + item.price}
         onClick={()=> this.removeItem(item._id,item.price, item.id)} />
     ))
@@ -378,13 +378,13 @@ class POS extends Component {
 
           <AppBar
             title={'$ ' + Number(Session.get('totalAmount')).toFixed(2)}
+            style={styles.drawerAppBar}
             showMenuIconButton={true}
             titleStyle={styles.drawerTitle}
             iconElementLeft={<IconButton onClick={()=> this.openCalc()}><Keyboard/></IconButton>}
             iconElementRight={<IconButton onClick={()=> this.closeDrawer()}><ArrowRight/></IconButton>}
 
-            zDepth={3}
-            />
+            zDepth={3} />
             {this.showMeBasket()}
             <Divider/>
         </Drawer>

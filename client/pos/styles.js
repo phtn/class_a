@@ -183,6 +183,9 @@ export const styles = {
     minWidth: '100px',
     maxHeight: '100px',
     minWidth: '100px'
+  },
+  drawerAppBar: {
+    
   }
 
 }
