@@ -89,10 +89,14 @@ class POS extends Component {
         key={beer._id}
         onClick={() => this.handlePunch(beer._id, bartender, beer.name, beer.price)
         }>
+
       <GridTile
 				title={beer.name}
 				actionIcon={<Chip>{beer.price}</Chip>}
-				style={styles.gridTileCaption}></GridTile>
+				style={styles.gridTileCaption}>
+				<img src={beer.img} style={styles.buttonImg}/>
+			</GridTile>
+
       </button>
     ))
   }
