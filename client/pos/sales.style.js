@@ -80,5 +80,23 @@ export const styles = {
   },
   tableBodySales: {
     backgroundColor: '#eee',
+  },
+  createEventActionField: {
+    textAlign: 'center',
+    height: 54
+  },
+  createEventActionBtn: {
+    width: 300,
+    height: 50,
+    fontFamily: 'Play',
+    fontSize: '1.3em'
+  },
+  createEventInputField: {
+    width: 300,
+    height: 50,
+    textAlign: 'center',
+    border: 'none',
+    fontFamily: 'Play',
+    fontSize: '1.2em'
   }
 }

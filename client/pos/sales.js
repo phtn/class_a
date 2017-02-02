@@ -11,12 +11,15 @@ import Mui from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import light from 'material-ui/styles/baseThemes/lightBaseTheme'
 import AppBar from 'material-ui/AppBar'
+import MenuItem from 'material-ui/MenuItem'
 import ArrowRight from 'material-ui/svg-icons/hardware/keyboard-arrow-right'
 import ArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left'
 import Code from 'material-ui/svg-icons/action/code'
-import IconButton from 'material-ui/IconButton'
 import Drawer from 'material-ui/Drawer'
+import PrintIcon from 'material-ui/svg-icons/action/print'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
+import IconButton from 'material-ui/IconButton'
 import Divider from 'material-ui/Divider'
 import LinearProgress from 'material-ui/LinearProgress'
 import {Card, CardActions, CardHeader, CardText, CardMedia} from 'material-ui/Card'
@@ -38,6 +41,8 @@ class SALES extends Component {
     this.state = {
       drawerOpen: true,
       dialogOpen: false,
+      showEventField: { display: 'none' },
+      showCreateEventBtn: styles.createEventActionBtn
     }
   }
 
@@ -73,6 +78,8 @@ class SALES extends Component {
     )
     return Session.get('returnTotalSale')
   }
+
+  /* HANDLE DRAWER */
   handleDrawerToggle() {
     this.setState({drawerOpen: ! this.state.drawerOpen})
   }
@@ -107,9 +114,13 @@ class SALES extends Component {
       <div style={styles.itemDiv} key={bartender._id}>
         <span style={styles.beerLabel}>{bartender.nickname}</span>
         <Divider />
-        <span style={styles.salesLabel}>{parseFloat(localStorage.getItem(bartender.nickname)).toFixed(2)}</span>
+        <span style={styles.salesLabel}>{bartender.totalSale}</span>
       </div>
     ))
+  }
+
+  setStatus(){
+    Meteor.call('insertStatus')
   }
 
   bartendersWrapper() {
@@ -129,6 +140,31 @@ class SALES extends Component {
     Meteor.call('minusOne', id)
     console.log(id)
   }
+
+  createEvent() {
+    this.setState({showCreateEventBtn: {display: 'none'}})
+    this.setState({showEventField: styles.createEventInputField})
+    this.setStatus()
+  }
+
+  handleEventChange(e) {
+    return this.setState({eventInput: e.target.value})
+  }
+
+  actionsWrapper() {
+    return (
+      <div style={styles.root}>
+        {this.showActionItems()}
+      </div>
+    )
+  }
+
+  showActionItems(){
+    return (
+      <MenuItem primaryText="Print Sales" leftIcon={<PrintIcon/>}/>
+    )
+  }
+
   render(){
 
     return (
@@ -174,31 +210,49 @@ class SALES extends Component {
           titleStyle={styles.drawerTitleSales}/>
           <div>
             <Card style={styles.cardClearance}>
-              <CardHeader
-                title='EVENT'/>
-              <CardActions>
-                <TextField hintText="Event Name"/>
-                <RaisedButton>NEW EVENT</RaisedButton>
-              </CardActions>
+              /* EVENT CARD */
+              <CardActions style={styles.createEventActionField}>
+                <input
+                  className='animated fadeIn'
+                  type='text'
+                  placeholder='event Name'
+                  style={this.state.showEventField}
+                  id='create-event-input'
+                  onChange={()=>this.handleEventChange()}
+                  />
 
+                <FlatButton
+                  style={this.state.showCreateEventBtn}
+                  onClick={()=> this.createEvent()}
+                  >Create an Event</FlatButton>
+              </CardActions>
             </Card>
+            {/* bartenders */}
             <Divider/>
             <Card style={styles.cardClearance}>
               <CardHeader
                 title='BARTENDERS'/>
-
               <CardMedia children={this.bartendersWrapper()}>
               </CardMedia>
-
             </Card>
+            {/* inventory */}
             <Divider/>
             <Card style={styles.cardClearance}>
               <CardHeader
                 title='INVENTORY'/>
               <CardMedia children={this.inventoryWrapper()}>
               </CardMedia>
+            </Card>
+            {/* actions */}
+            <Divider/>
+            <Card style={styles.cardClearance}>
+              <CardHeader
+                title='ACTIONS'/>
+              <CardMedia children={this.actionsWrapper()}>
+              </CardMedia>
 
             </Card>
+
           </div>
       </Drawer>
 
@@ -221,13 +275,15 @@ class SALES extends Component {
 SALES.propTypes = {
   sale: React.PropTypes.array,
   beers: React.PropTypes.array,
-  bartenders: React.PropTypes.array
+  bartenders: React.PropTypes.array,
+  eachSale: React.PropTypes.array,
 }
 
 export default createContainer(()=> {
   return {
     sale: Sales.find().fetch().reverse(),
     beers: Beers.find().fetch(),
-    bartenders: Bartenders.find().fetch()
+    bartenders: Bartenders.find().fetch(),
+    eachSale: Sales.find().fetch()
   }
 }, SALES)

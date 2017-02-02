@@ -18,6 +18,7 @@ import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
 import { Shots } from '/collections/shots'
 import { Mixes } from '/collections/mixes'
+import { Cordials } from '/collections/cordials'
 import { Wines } from '/collections/wines'
 import { Basket } from '/collections/basket'
 import { Sales } from '/collections/sales'
@@ -91,7 +92,7 @@ class POS extends Component {
         }>
 
       <GridTile
-				title={beer.name}
+				title={beer.type}
 				actionIcon={<Chip>{beer.price}</Chip>}
 				style={styles.gridTileCaption}>
 				<img src={beer.img} style={styles.buttonImg}/>
@@ -113,12 +114,64 @@ class POS extends Component {
 				<GridTile
 					title={shot.name}
 					actionIcon={<Chip>{shot.price}</Chip>}
-					style={styles.gridTileCaption}></GridTile>
+					style={styles.gridTileCaption}>
+					<img src={shot.img} style={styles.buttonImg}/>
+				</GridTile>
 			</button>
 		))
 	}
 	/*M I X E S*/
-	//
+	showMeMixes() {
+		let bartender = this.state.bartender
+		return this.props.mixes.map((mix)=> (
+			<button
+				className="button button-3d button-box button-jumbo animated flipInX"
+				style={styles.beerButton}
+				key={mix._id}
+				onClick={() => this.handlePunch(mix._id, bartender, mix.name, mix.price, mix.type)
+				}>
+				<GridTile
+					title={mix.name}
+					actionIcon={<Chip>{mix.price}</Chip>}
+					style={styles.gridTileCaption}></GridTile>
+			</button>
+		))
+	}
+
+	/* C O R D I A L S */
+	showMeCordials() {
+		let bartender = this.state.bartender
+		return this.props.cordials.map((cordial)=> (
+			<button
+				className="button button-3d button-box button-jumbo animated flipInX"
+				style={styles.beerButton}
+				key={cordial._id}
+				onClick={() => this.handlePunch(cordial._id, bartender, cordial.name, cordial.price, cordial.type)
+				}>
+				<GridTile
+					title={cordial.name}
+					actionIcon={<Chip>{cordial.price}</Chip>}
+					style={styles.gridTileCaption}></GridTile>
+			</button>
+		))
+	}
+	/* W I N E S */
+	showMeWines() {
+		let bartender = this.state.bartender
+		return this.props.wines.map((wine)=> (
+			<button
+				className="button button-3d button-box button-jumbo animated flipInX"
+				style={styles.beerButton}
+				key={wine._id}
+				onClick={() => this.handlePunch(wine._id, bartender, wine.name, wine.price, wine.type)
+				}>
+				<GridTile
+					title={wine.name}
+					actionIcon={<Chip>{wine.price}</Chip>}
+					style={styles.gridTileCaption}></GridTile>
+			</button>
+		))
+	}
 
   showMeBasket() {
     return this.props.basket.map((item)=> (
@@ -144,6 +197,9 @@ class POS extends Component {
 		case 'mixes':
 		return this.showMeMixes()
 		break
+		case 'cordials':
+		return this.showMeCordials()
+		break
 		case 'wine':
 		return this.showMeWines()
 		break
@@ -158,6 +214,7 @@ class POS extends Component {
   removeItem(id,price,beerId) {
     Meteor.call('removeItemFromBasket', id)
     Session.setPersistent('totalAmount', Session.get('totalAmount') > 0 ? Session.get('totalAmount')-Number(price) : 0)
+		//Session.setPersistent('returnTotalBasket', Session.get('returnTotalBasket') > 0 ? Session.get('returnTotalBasket')-Number(price) : 0)
 		this.decrementBeerCount(beerId)
 	}
   who(name) {
@@ -186,8 +243,12 @@ class POS extends Component {
   calcTotal(price) {
     let p = Number(price).toFixed(2)
     Session.setPersistent('totalAmount', Session.get('totalAmount') + Number(p))
-    console.log(Session.get('totalAmount'))
+    //console.log(Session.get('totalAmount'))
   }
+
+
+
+
 	updateBeerInStock() {
 		for (let key in localStorage) {
 			if (key.length === 17){
@@ -220,6 +281,7 @@ class POS extends Component {
     }
   }
   checkout(owner, total, ct, ch, items) {
+		Meteor.call('insertEachSale', owner, 'EVENT', total)
     this.setState({calculator: false})
     this.setState({snackSale: total})
     this.setState({snackChange: ch})
@@ -228,7 +290,7 @@ class POS extends Component {
     Meteor.call('removeAllItemsFromBasket')
     Session.setPersistent('totalAmount', 0.00)
 
-    Session.set('cashTendered', '')
+    Session.setPersistent('cashTendered', '')
     this.clearCalc()
     this.setState({completeSnack: true})
     this.setState({lift: {visibility: 'hidden'}})
@@ -359,6 +421,10 @@ class POS extends Component {
           <FlatButton labelStyle={styles.cat} label="MIXES" onClick={()=> this.setCategory('mixes') }/>
         </ToolbarGroup>
 
+				<ToolbarGroup className="animated fadeInLeft" >
+          <FlatButton labelStyle={styles.cat} label="CORDIALS" onClick={()=> this.setCategory('cordials') }/>
+        </ToolbarGroup>
+
         <ToolbarGroup className="animated fadeInLeft" lastChild={true}>
           <FlatButton labelStyle={styles.cat} label="WINE" onClick={()=> this.setCategory('wine') }/>
         </ToolbarGroup>
@@ -460,16 +526,18 @@ POS.propTypes = {
   basket: React.PropTypes.array,
 	shots: React.PropTypes.array,
 	mixes: React.PropTypes.array,
+	cordials: React.PropTypes.array,
 	wines: React.PropTypes.array,
 };
 
 export default createContainer(()=> {
   return {
-    bts: Bartenders.find().fetch(),
-    beers: Beers.find().fetch(),
+    bts: Bartenders.find({status: 'active'}).fetch(),
+    beers: Beers.find({mode: 'active'}).fetch(),
     basket: Basket.find().fetch(),
 		shots: Shots.find().fetch(),
 		mixes: Mixes.find().fetch(),
+		cordials: Cordials.find().fetch(),
 		wines: Wines.find().fetch(),
   }
 }, POS)

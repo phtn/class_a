@@ -9,8 +9,10 @@ import { styles } from '../config.style'
 
 /* B A R T E N D E R S */
 const handleInsertBartender = ()=> {
-  Meteor.call('insertBartender', Session.get('codename-input'))
-  
+  if( Session.get('codename') !== ''){
+    Meteor.call('insertBartender', Session.get('codename-input'))
+  }
+
 }
 const handleChangeBartender = (e) => {
   Session.set('codename-input', e.target.value)
@@ -18,7 +20,7 @@ const handleChangeBartender = (e) => {
 
 const addBartenderContainer = ({}) => (
   <div>
-    <Card className="add-cards" style={styles.cardContent}>
+    <Card className="add-cards animated fadeInUp" style={styles.cardContent}>
     <Paper
       zDepth={2}
       children={<div className="brand-div">

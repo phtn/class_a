@@ -34,7 +34,7 @@ const handleChangeBeerQty = (e) => {
 
 const addBeerContainer = ({}) => (
   <div>
-    <Card className="add-cards" style={styles.cardContent}>
+    <Card className="add-cards animated fadeInUp" style={styles.cardContent}>
     <Paper
       zDepth={2}
       children={<div className="brand-div">

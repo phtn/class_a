@@ -9,61 +9,61 @@ import { styles } from '../config.style'
 
 
 /*S H O T S */
-const handleChangeShotName = (e) => {
-  Session.set('shot-name-input', e.target.value)
+const handleChangeCordialName = (e) => {
+  Session.set('cordial-name-input', e.target.value)
 }
-const handleChangeShotPrice = (e) => {
+const handleChangeCordialPrice = (e) => {
   price = e.target.value
-  Session.set('shot-price-input', Number(price).toFixed(2))
+  Session.set('cordial-price-input', Number(price).toFixed(2))
 }
-const handleChangeShotType = (e) => {
-  Session.set('shot-type-input', e.target.value)
+const handleChangeCordialType = (e) => {
+  Session.set('cordial-type-input', e.target.value)
 }
-const handleChangeShotQty = (e) => {
-  Session.set('shot-qty-input', e.target.value)
+const handleChangeCordialQty = (e) => {
+  Session.set('cordial-qty-input', e.target.value)
 }
-const handleInsertShot = () => {
-  Meteor.call('insertShot',
-  Session.get('shot-name-input'),
-  Session.get('shot-price-input'),
-  Session.get('shot-type-input'),
-  Session.get('shot-qty-input'),
+const handleInsertCordial = () => {
+  Meteor.call('insertCordial',
+  Session.get('cordial-name-input'),
+  Session.get('cordial-price-input'),
+  Session.get('cordial-type-input'),
+  Session.get('cordial-qty-input'),
   )
 }
 
-const addShotContainer = ({}) => (
+const addCordialContainer = ({}) => (
   <div>
   <Card className="add-cards animated fadeInUp" style={styles.cardContent}>
   <Paper
     zDepth={2}
     children={<div className="brand-div">
-      <span className="config-header">ADD SHOTS</span>
+      <span className="config-header">ADD CORDIALS</span>
     </div>}
     />
 
   <TextField
-  hintText="Ketel One..."
+  hintText="Grand Marnier..."
   hintStyle={styles.hint}
   floatingLabelText= 'Name'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotName}
+  onChange={handleChangeCordialName}
 />
 <TextField
-  hintText="3..."
+  hintText="8..."
   hintStyle={styles.hint}
   floatingLabelText= 'Price'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotPrice}
+  onChange={handleChangeCordialPrice}
 />
 <TextField
-  hintText="Vodka..."
+  hintText="Cordial..."
   hintStyle={styles.hint}
   floatingLabelText= 'Type'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotType}
+  onChange={handleChangeCordialType}
 />
 <TextField
   hintText="24..."
@@ -71,14 +71,14 @@ const addShotContainer = ({}) => (
   floatingLabelText= 'Quantity'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotQty}
+  onChange={handleChangeCordialQty}
 />
 
 <CardActions>
-  <RaisedButton style={styles.button} onClick={handleInsertShot} label='Add' default={true}/>
+  <RaisedButton style={styles.button} onClick={handleInsertCordial} label='Add' default={true}/>
 </CardActions>
 </Card>
 
   </div>
 )
-export default addShotContainer
+export default addCordialContainer

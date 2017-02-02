@@ -9,45 +9,45 @@ import { styles } from '../config.style'
 
 
 /*S H O T S */
-const handleChangeShotName = (e) => {
-  Session.set('shot-name-input', e.target.value)
+const handleChangeMixName = (e) => {
+  Session.set('mix-name-input', e.target.value)
 }
-const handleChangeShotPrice = (e) => {
+const handleChangeMixPrice = (e) => {
   price = e.target.value
-  Session.set('shot-price-input', Number(price).toFixed(2))
+  Session.set('mix-price-input', Number(price).toFixed(2))
 }
-const handleChangeShotType = (e) => {
-  Session.set('shot-type-input', e.target.value)
+const handleChangeMixType = (e) => {
+  Session.set('mix-type-input', e.target.value)
 }
-const handleChangeShotQty = (e) => {
-  Session.set('shot-qty-input', e.target.value)
+const handleChangeMixQty = (e) => {
+  Session.set('mix-qty-input', e.target.value)
 }
-const handleInsertShot = () => {
-  Meteor.call('insertShot',
-  Session.get('shot-name-input'),
-  Session.get('shot-price-input'),
-  Session.get('shot-type-input'),
-  Session.get('shot-qty-input'),
+const handleInsertMix = () => {
+  Meteor.call('insertMix',
+  Session.get('mix-name-input'),
+  Session.get('mix-price-input'),
+  Session.get('mix-type-input'),
+  Session.get('mix-qty-input'),
   )
 }
 
-const addShotContainer = ({}) => (
+const addMixContainer = ({}) => (
   <div>
   <Card className="add-cards animated fadeInUp" style={styles.cardContent}>
   <Paper
     zDepth={2}
     children={<div className="brand-div">
-      <span className="config-header">ADD SHOTS</span>
+      <span className="config-header">ADD MIXES</span>
     </div>}
     />
 
   <TextField
-  hintText="Ketel One..."
+  hintText="Tequila Sunrise..."
   hintStyle={styles.hint}
   floatingLabelText= 'Name'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotName}
+  onChange={handleChangeMixName}
 />
 <TextField
   hintText="3..."
@@ -55,15 +55,15 @@ const addShotContainer = ({}) => (
   floatingLabelText= 'Price'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotPrice}
+  onChange={handleChangeMixPrice}
 />
 <TextField
-  hintText="Vodka..."
+  hintText="Cocktail..."
   hintStyle={styles.hint}
   floatingLabelText= 'Type'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotType}
+  onChange={handleChangeMixType}
 />
 <TextField
   hintText="24..."
@@ -71,14 +71,14 @@ const addShotContainer = ({}) => (
   floatingLabelText= 'Quantity'
   floatingLabelStyle={styles.floating}
   style={styles.text}
-  onChange={handleChangeShotQty}
+  onChange={handleChangeMixQty}
 />
 
 <CardActions>
-  <RaisedButton style={styles.button} onClick={handleInsertShot} label='Add' default={true}/>
+  <RaisedButton style={styles.button} onClick={handleInsertMix} label='Add' default={true}/>
 </CardActions>
 </Card>
 
   </div>
 )
-export default addShotContainer
+export default addMixContainer

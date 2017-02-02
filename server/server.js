@@ -2,23 +2,26 @@ import { Meteor } from 'meteor/meteor';
 import { Bartenders } from '/collections/bartenders'
 import { Beers } from '/collections/beers'
 import { Shots } from '/collections/shots'
+import { Mixes } from '/collections/mixes'
+import { Cordials } from '/collections/cordials'
+import { Wines } from '/collections/wines'
 import { Basket } from '/collections/basket'
 import { Sales } from '/collections/sales'
 import { Events } from '/collections/events'
-import { Wines } from '/collections/wines'
+
 
 Meteor.startup(() => {
   Meteor.methods({
     insertBartender(name) {
       const d = new Date()
       const bartender = Bartenders.insert({
-        item: Bartenders.find().count() + 1,
         nickname: name,
-        status: 'Active',
-        sales: '$100.00',
+        status: 'Inactive',
+        mode: '',
         createAt: d.toLocaleString()
       })
       return bartender
+      console.log('test')
     },
 
     insertBeer(beer, price, type, qty) {
@@ -50,8 +53,44 @@ Meteor.startup(() => {
       })
       return shots
     },
-
-    insertWines(wine, type, cat, price, qty) {
+    /* MIXES */
+    insertMix(mix, price, type, qty) {
+      const d = new Date()
+      const mixes = Mixes.insert({
+        name: mix,
+        price: price,
+        type: type,
+        qty: parseInt(qty),
+        cost: 1.50,
+        status: '',
+        note: '',
+        inStock: parseInt(qty),
+        img: '',
+        createdAt: d.toLocaleString(),
+        updatedAt: d.toLocaleString()
+      })
+      return mixes
+    },
+    /* CORDIALS */
+    insertCordial(cordial, price, type, qty) {
+      const d = new Date()
+      const cordials = Cordials.insert({
+        name: cordial,
+        price: price,
+        type: type,
+        qty: parseInt(qty),
+        cost: 1.50,
+        status: '',
+        note: '',
+        inStock: parseInt(qty),
+        img: '',
+        createdAt: d.toLocaleString(),
+        updatedAt: d.toLocaleString()
+      })
+      return cordials
+    },
+    /* WINES */
+    insertWine(wine, price, type, cat, qty) {
       const d = new Date()
       const wines = Wines.insert({
         name: wine,
@@ -59,12 +98,14 @@ Meteor.startup(() => {
         type: type,
         cat: cat,
         qty: parseInt(qty),
+        status: '',
+        note: '',
+        mode: '',
         inStock: parseInt(qty),
         createdAt: d.toLocaleString()
       })
       return wines
     },
-
 
     insertBasket(id, owner, item, price, type) {
       const d = new Date()
@@ -72,12 +113,13 @@ Meteor.startup(() => {
         id: id,
         owner: owner,
         item: item,
-        price: price,
+        price: parseInt(price),
         type: type,
         createdAt: d.toLocaleString()
       })
       return basket
     },
+
     insertSales(owner, total, ct, ch, items) {
       const d = new Date()
       const sales = Sales.insert({
@@ -91,16 +133,31 @@ Meteor.startup(() => {
       })
       return sales
     },
-    insertEvent(eventName, date) {
+
+    insertEachSale(id, eventName, amount) {
       const d = new Date()
-      const events = Events.insert({
-        eventName: eventName,
-        date: date,
-        createdAt: d.toLocaleString(),
-        updatedAt: d.toLocaleString(),
-      })
-      return events
+      const eachSale = Bartenders.update({nickname: id},
+          {
+            $inc: { totalSale: amount},
+            $set: {
+              eventName: eventName,
+              updatedAt: d.toLocaleString()
+            }
+          }
+
+      )
+      return eachSale
     },
+
+    insertStatus(){
+      const modeSet = Shots.update({cost: 1.5}, {
+        $set: {
+          mode: ''
+        }
+      }, { multi: true })
+      return modeSet
+    },
+
     removeAllSales() {
       Sales.remove({})
     },

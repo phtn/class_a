@@ -13,6 +13,7 @@ import Admin from './pos/admin'
 import Config from './pos/pos.config'
 //import Config from './pos/config'
 import Sales from './pos/sales'
+import SalesPrintable from './pos/export/sales-printable'
 
 injectTapEventPlugin(); // touchscreen plugin
 
@@ -38,5 +39,6 @@ render((
     </Route>
     <Route path="/admin/config" component={Config} />
     <Route path="/admin/sales" component={Sales} />
+    <Route path="admin/sales/sales-printable" component={SalesPrintable} />
   </Router>
 ), document.getElementById('container'))
